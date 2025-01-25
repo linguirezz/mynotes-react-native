@@ -1,20 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import AppNavigator from './navigation/AppNavigator';
+import {getCurrentUser} from './services/authServices.js'
+import {useEffect} from 'react'
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+ useEffect(()=>{
+  getCurrentUser()
+ },[])
+  return <AppNavigator/>
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
