@@ -1,5 +1,7 @@
 todo :
 - make the dashboard beautiful
+- make the notes page
+- add edit and delete logic
 - commit to github
 
 target :
