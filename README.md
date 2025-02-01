@@ -1,6 +1,9 @@
 todo :
 -make the getNotes data display on the bxo
 -implement the update and delete 
+- make the dashboard beautiful
+- make the notes page
+- add edit and delete logic
 - commit to github
 
 target :
