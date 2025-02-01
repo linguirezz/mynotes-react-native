@@ -10,8 +10,8 @@ import { navigateAndResetAllRoutes } from "../navigation/navigationFunction.js";
 const auth = getAuth(app)
 async function signInUser(navigation,email,password){
   try { 
-      const response = await signInWihtEmailAndPassword(auth,email,password);
-      const isVerified = user.isVerified
+      const response = await signInWithEmailAndPassword(auth,email,password);
+      const isVerified = response.isVerified
     if(response){
         console.log("user has been succed to signIn !!!!")
         console.log("with response : ",response)
@@ -66,6 +66,7 @@ async function getCurrentUser(){
     try {        
         const user = auth.currentUser
         console.log(`current user ${JSON.stringify(user)}`)
+        return user
     } catch (error) {
         console.error("terdapat error di fungsi getCurrentUser")
         console.error(error)

@@ -1,5 +1,6 @@
 todo :
-- make the dashboard beautiful
+-make the getNotes data display on the bxo
+-implement the update and delete 
 - commit to github
 
 target :

@@ -1,42 +1,69 @@
-import { getFirestore,collection,addDoc,serverTimestamp,getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { getFirestore,collection,addDoc,serverTimestamp,getDocs,getDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import app from "../firebase.js";
+import { navigateAndResetAllRoutes } from "../navigation/navigationFunction.js";
 const db = getFirestore(app)
 console.log("hello world")
 // create
-async function uploadsNote(userId){
+async function uploadsNote(userId,title,content){
    try {
     const notesCollectionRef = collection(db,`users/${userId}/notes`)
     const docRef = await addDoc(notesCollectionRef,{
-        createdAt:serverTimestamp()
+        createdAt:serverTimestamp(),
+        title,
+        content        
     })
+    
     console.log("note succes to be added with id :",docRef.id)
    } catch (error) {
     console.error("ups.. ada yang salah pada logika upload")
+    console.error(error)
    }
 }
-// read
+// read (get all docs)
 async function getNotes(userId){
     try {
         const notesCollectionRef = collection(db,`users/${userId}/notes`)
         const querySnapShot = await getDocs(notesCollectionRef)
+        const notes = []
         querySnapShot.forEach((doc)=>{
             const docId = doc.id
             const data = doc.data()
-            console.log(`${JSON.stringify(docId)}=${JSON.stringify(data)}`)
-        })
+            notes.push({id:docId,data:data})
+           
+        }    
+    )
+    return notes
     } catch (error) {
         console.error("ups ... there is something wrong with your getnotes function!!")
         console.error(error)
     }
   
 } 
+// read (get a spesific doc)
+async function getNote(userId,docId) {
+    try {
+        const docRef = doc(db,`users/${userId}/notes`,docId);
+        const note = await getDoc(docRef);
+        if(note.exists()){
+            const data = note.data();
+            return {id:note.id,data}
+        }
+       
+    } catch (error) {
+        console.error("ups ... there is something wrong with your getnotes function!!")
+        console.error(error)
+    }
+   
+}
 // update
-async function editNotes(userId,noteId){
-    console.log("hadir")
+async function editNotes(userId,noteId,title,content){
+    
     try {
     const notesDocRef = doc(db,`users/${userId}/notes/${noteId}`)
 
     await updateDoc(notesDocRef,{
+            title,
+            content,
             message:"updated",
             updatedAt:serverTimestamp()
         })
@@ -62,4 +89,4 @@ async function deleteNote(userId,noteId){
 function clearNote(){
     null
 }
-export {uploadsNote,getNotes,editNotes,deleteNote,clearNote}
+export {uploadsNote,getNotes,getNote,editNotes,deleteNote,clearNote}
