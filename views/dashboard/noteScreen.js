@@ -7,6 +7,7 @@ import { editNotes, getNote, uploadsNote } from '../../services/firestoreService
 import { getCurrentUser } from '../../services/authServices'
 import { navigateAndResetAllRoutes } from '../../navigation/navigationFunction'
 import { useNoteContext } from '../../contexts/notesContext'
+import { useAuthContext } from '../../contexts/authContext'
 function NoteScreen({navigation}) {
   const [note,setNote] =useState(
     {
@@ -14,8 +15,12 @@ function NoteScreen({navigation}) {
       content:""
     })
     const [isLoading,setIsLoading] = useState(false)
+
+    // CONTEXT
     const {noteContext} = useNoteContext();
-   const handleNote =(key,value)=>{
+    const {account} = useAuthContext()
+    // HANDLE FUNCTION
+    const handleNote =(key,value)=>{
     setNote({...note,[key]:value}) 
    }
     const handleSave= async  ()=>{
@@ -26,13 +31,13 @@ function NoteScreen({navigation}) {
         // FOR PRODUCTION
         // const user = await getCurrentUser()
         // await uploadsNote(user,title,content)
+        await uploadsNote(account.uid,title,content)
         navigateAndResetAllRoutes(navigation,"home")
-        await uploadsNote(12345678,title,content)
       }
       else{
         const {title,content}= note
         console.log("data will be edited and saved");
-        await editNotes("12345678",noteContext.id,title,content);
+        await editNotes(account.uid,noteContext.id,title,content);
         navigateAndResetAllRoutes(navigation,"home")
       }
     }
@@ -40,7 +45,7 @@ function NoteScreen({navigation}) {
        console.log(noteContext.id !== null)
       if(noteContext.id !== null ){
         setIsLoading(true)
-      getNote("12345678",noteContext.id)
+      getNote(account.uid,noteContext.id)
       .then(document => {
         if(document){
           const note = document.data;
@@ -59,13 +64,17 @@ function NoteScreen({navigation}) {
         console.log("no notes selected")
       }
       
-    },[])
+    },[account])
     useEffect(()=>{
       console.log(
         `title:${note.title} 
         content:${note.content}
         `)  
     },[note])
+    useEffect(()=>{
+      console.log("account state is changin in noteScreenJs")
+      
+    },[account])
     // for checking the noteContext id
     // useEffect(()=>{
       

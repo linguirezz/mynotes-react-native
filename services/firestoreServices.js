@@ -6,6 +6,8 @@ console.log("hello world")
 // create
 async function uploadsNote(userId,title,content){
    try {
+    console.log("upload notes")
+    console.log(userId)
     const notesCollectionRef = collection(db,`users/${userId}/notes`)
     const docRef = await addDoc(notesCollectionRef,{
         createdAt:serverTimestamp(),
@@ -22,6 +24,7 @@ async function uploadsNote(userId,title,content){
 // read (get all docs)
 async function getNotes(userId){
     try {
+        console.log("from getNotes",userId)
         const notesCollectionRef = collection(db,`users/${userId}/notes`)
         const querySnapShot = await getDocs(notesCollectionRef)
         const notes = []

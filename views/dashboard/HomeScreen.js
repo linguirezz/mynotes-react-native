@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react'
 import { View,Text,Button, TouchableOpacity, Vibration ,Modal} from 'react-native'
-import { signOutUser } from '../../services/authServices'
+import { signInAsGuestAccount, signOutUser } from '../../services/authServices'
 import { navigateAndKeepTheRoutes, navigateAndResetAllRoutes } from '../../navigation/navigationFunction'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import Style from '../../styles/dashboard/home/style'
@@ -8,6 +8,7 @@ import {theme} from '../../styles/dashboard/theme'
 import { uploadsNote,getNotes,editNotes,deleteNote } from '../../services/firestoreServices'
 import { SearchBar } from 'react-native-screens'
 import { useNoteContext } from '../../contexts/notesContext'
+import { useAuthContext } from '../../contexts/authContext'
 function HomeScreen({navigation}) {
   const [notes,setNotes] = useState([]);
   const[isLoading,setIsLoading]= useState(true);
@@ -21,44 +22,71 @@ function HomeScreen({navigation}) {
     id:"",
     index:""
   });
+  // const [isThereAnAccount,setIsThereAnAccount] = useState(false)
+  // CONTEXT
+  // notes context(notes id)
   const {setNoteContext} = useNoteContext();
-  // fetching all the notes which user has
-  useEffect(()=>{
-    setIsLoading(true)
-    getNotes(12345678).then(data=>{
-      const notesSnapshot =data.map((note)=>{
-        return {
-          id:note.id,
-          title:note.data.title,
-          content:note.data.content
-        }
-      })
-      setNotes(notesSnapshot)   
-    })
-    .catch(error=>console.error("error was happening while fetching data :",error))
-    .finally(setIsLoading(false))
-  },[])
-//  checking the notes state uncommand this if you wanna check the notes state 
+  const {account,setAccount}=useAuthContext();
 
+
+  // rendering all the pages need when the homepage firstly rendered
+  useEffect(()=>{
+    
+    setIsLoading(true)
+    // creating guest account
+    
+      console.log("account",account.uid)
+      console.log(account.uid == true)
+      if(account.uid){
+        getNotes(account.uid).then(data=>{
+          if(data){
+            const notesSnapshot =data.map((note)=>{
+              return {
+                id:note.id,
+                title:note.data.title,
+                content:note.data.content
+              }
+            })
+            setNotes(notesSnapshot)   
+          }
+          else{
+            console.log("there are not datas detected")
+            
+          }
+        
+    
+          
+        })
+        .catch(error=>console.error("error was happening while fetching data :",error))
+        .finally(setIsLoading(false))
+      }
+  },[account])
+//  checking the notes state uncommand this if you wanna check the notes state 
   useEffect(() => { 
     // console.log(notes)
     // console.log(notes.length)
     // case : gunakan ini jika anda ingin melihat apakah data sudah teranu
   }, [notes])
+//  checking the authContext
+useEffect(() => { 
+  console.log("the account state is changing")
+  console.log("account in use :",account.uid)
+}, [account])
   
+  // HANDLE FUNCTION
   const handleSignOut= async()=>{
    await signOutUser()
  
   }
   const handleUploadsNote = async()=>{
-   await uploadsNote("12345678")
+   await uploadsNote(account.uid)
   }
   const handlegetNotes = async()=>{
-   await getNotes("12345678")
+   await getNotes(account.uid)
   }
   const handleEditNotes = async()=>{
     console.log("handleEditNotes")
-   await editNotes("12345678","Twni1I02l1CIqJJyvXsi")
+   await editNotes(account.uid,"Twni1I02l1CIqJJyvXsi")
   }
   const handleDeleteNote = async()=>{
     console.log("handleDeleteNotes")
@@ -66,7 +94,7 @@ function HomeScreen({navigation}) {
     const index = selectedItem.index;
     setNotes(notes.filter((note) => note.id !== id ));
     setIsMenuVisible(false)
-   await deleteNote("12345678",id)
+   await deleteNote(account.uid,id)
   }
   const handleLongPress = async(id,event)=>{
     Vibration.vibrate(50);

@@ -3,7 +3,8 @@ import { createUserWithEmailAndPassword,
     getAuth,
     sendEmailVerification,
     signInWithEmailAndPassword,
-    reload
+    reload,
+    signInAnonymously
     
  } from "firebase/auth"
 import { navigateAndResetAllRoutes } from "../navigation/navigationFunction.js";
@@ -31,7 +32,18 @@ async function signInUser(navigation,email,password){
     console.error(error)
   }
 }
-
+async function signInAsGuestAccount(){
+try {
+  const response = await signInAnonymously(auth);
+  const user = response.user;
+  const userUID = user.uid;
+  return {uid : userUID ,user}
+} catch (error) {
+  console.error("ada kesalahan di fungsi signInAsGuestAccount user!!!")
+    console.error(error)
+}
+  
+}
 // createUser
 async function createUser(navigation,email,password){
     try { 
@@ -112,4 +124,5 @@ async function signOutUser(navigation,email,password){
       console.error(error)
     }
   }
-  export {createUser,signInUser,sendEmailVerifyNotification,refreshEmailVerifiedStatus,signOutUser,getCurrentUser}
+
+  export {createUser,signInUser,sendEmailVerifyNotification,refreshEmailVerifiedStatus,signOutUser,getCurrentUser,signInAsGuestAccount}
