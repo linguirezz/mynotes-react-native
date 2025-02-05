@@ -10,69 +10,18 @@ import { SearchBar } from 'react-native-screens'
 import { useNoteContext } from '../../contexts/notesContext'
 import { useAuthContext } from '../../contexts/authContext'
 function HomeScreen({navigation}) {
-  const [notes,setNotes] = useState([]);
-  const[isLoading,setIsLoading]= useState(true);
+  
   const [isMenuClose,setIsMenuClose]=useState(false);
   const [isMenuVisible,setIsMenuVisible]=useState(false);
   const [menuPosition,setMenuPosition]=useState({
     x:0,
     y:0
   });
-  const [selectedItem,setSelectedItem]=useState({
-    id:"",
-    index:""
-  });
-  // const [isThereAnAccount,setIsThereAnAccount] = useState(false)
   // CONTEXT
   // notes context(notes id)
-  const {setNoteContext} = useNoteContext();
+  const {notes,setNotes,isLoading,setIsLoading} = useNoteContext();
   const {account,setAccount}=useAuthContext();
 
-
-  // rendering all the pages need when the homepage firstly rendered
-  useEffect(()=>{
-    
-    setIsLoading(true)
-    // creating guest account
-    
-      console.log("account",account.uid)
-      console.log(account.uid == true)
-      if(account.uid){
-        getNotes(account.uid).then(data=>{
-          if(data){
-            const notesSnapshot =data.map((note)=>{
-              return {
-                id:note.id,
-                title:note.data.title,
-                content:note.data.content
-              }
-            })
-            setNotes(notesSnapshot)   
-          }
-          else{
-            console.log("there are not datas detected")
-            
-          }
-        
-    
-          
-        })
-        .catch(error=>console.error("error was happening while fetching data :",error))
-        .finally(setIsLoading(false))
-      }
-  },[account])
-//  checking the notes state uncommand this if you wanna check the notes state 
-  useEffect(() => { 
-    // console.log(notes)
-    // console.log(notes.length)
-    // case : gunakan ini jika anda ingin melihat apakah data sudah teranu
-  }, [notes])
-//  checking the authContext
-useEffect(() => { 
-  console.log("the account state is changing")
-  console.log("account in use :",account.uid)
-}, [account])
-  
   // HANDLE FUNCTION
   const handleSignOut= async()=>{
    await signOutUser()
@@ -100,12 +49,7 @@ useEffect(() => {
     Vibration.vibrate(50);
     setIsMenuVisible(true);
     console.log(id)
-    setSelectedItem({
-      id
-    } )
-    
-    
-    
+    setNotes(notes.map((note)=>{note.id === id ? {...note,isSelected:true}:note}))
     setMenuPosition(
       {
         x:event.nativeEvent.pageX,
@@ -116,8 +60,10 @@ useEffect(() => {
   }
   const handlePress =(id)=>{
     try {
-      console.log(id)
-    setNoteContext({id})
+      console.log(id);
+      const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:true}:note});
+      console.log(updatedNotesSelected)
+      setNotes(updatedNotesSelected);
     navigateAndResetAllRoutes(navigation,"note")  
     } catch (error) {
       console.error("error terjadi pada fungsi handlePress:",error)
@@ -147,7 +93,7 @@ useEffect(() => {
     {/* Kelompok notes kotak (indeks genap) */}
     <View>
       {notes.map((note, index) =>
-        index % 2 === 0 ? ( // genap: squareBox
+       {console.log(note);return index % 2 === 0 ? ( // genap: squareBox
           <TouchableOpacity
             style={Style.squareBox}
             key={note.id}
@@ -157,14 +103,14 @@ useEffect(() => {
           >
             <Text style={Style.noteTitle}>{note.title}</Text>
           </TouchableOpacity>
-        ) : null
+        ) : null}
       )}
     </View>
 
     {/* Kelompok notes persegi panjang (indeks ganjil) */}
     <View>
-      {notes.map((note, index) =>
-        index % 2 !== 0 ? ( // ganjil: rectangleBox
+      {notes.map((note, index) =>{console.log(index);
+       return index % 2 !== 0 ? ( // ganjil: rectangleBox
           <TouchableOpacity
             style={Style.rectangleBox}
             key={note.id}
@@ -175,14 +121,14 @@ useEffect(() => {
             <Text style={Style.noteTitle} >{note.title}</Text>
             <Text></Text>
           </TouchableOpacity>
-        ) : null
+        ) : null}
       )}
     </View>
   </View>
 )}
     </ScrollView>
     {/* add button */}
-    <TouchableOpacity style={Style.addButton} onPress={()=>{setNoteContext({id:null}); navigateAndKeepTheRoutes(navigation,"note") }}>
+    <TouchableOpacity style={Style.addButton} onPress={()=>{ navigateAndKeepTheRoutes(navigation,"note") }}>
       <Text style={Style.addButtonContent}></Text>
     </TouchableOpacity>
      {/* edit menu */}

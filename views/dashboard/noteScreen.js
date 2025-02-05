@@ -15,71 +15,97 @@ function NoteScreen({navigation}) {
       content:""
     })
     const [isLoading,setIsLoading] = useState(false)
+    const [isSelectedItem,setIsSelectedItem] = useState(false);
+    const [currentNote,setCurrentNote] = useState(false);
 
     // CONTEXT
-    const {noteContext} = useNoteContext();
+    const {notes,setNotes} = useNoteContext();
     const {account} = useAuthContext()
     // HANDLE FUNCTION
     const handleNote =(key,value)=>{
     setNote({...note,[key]:value}) 
    }
     const handleSave= async  ()=>{
-      if(noteContext.id === null ){
+     console.log(isSelectedItem) 
+      if(isSelectedItem === false){
         const {title,content}= note
         console.log("data will be saved")
         console.log("data :",note)
-        // FOR PRODUCTION
-        // const user = await getCurrentUser()
-        // await uploadsNote(user,title,content)
-        await uploadsNote(account.uid,title,content)
+        
+      
         navigateAndResetAllRoutes(navigation,"home")
+        // server update
+        const notesUploaded = await uploadsNote(account.uid,title,content)
+        const docId = notesUploaded.id;
+          // ui update 
+          console.log(notes)
+          setNotes((prevNotes) => [
+            ...prevNotes,
+            {
+              id: docId,
+              title: title,
+              content: content,
+              isSelected: false
+            }
+          ]);
+        // id update
+      //   const updateNotesList = notes.map((note)=>{
+      //     note.id === null ? {...note ,id:docId}:note
+      //   })
+        
+      //  setNotes(updateNotesList)
       }
       else{
-        const {title,content}= note
+     
+
+        // ui update
+         const {title,content} = note
+        const updateNotesList = notes.map((item)=>{
+        
+         return item.isSelected === true ? {...item,title,content} :item
+        })
+
         console.log("data will be edited and saved");
-        await editNotes(account.uid,noteContext.id,title,content);
-        navigateAndResetAllRoutes(navigation,"home")
+        setNotes(updateNotesList);
+        navigateAndResetAllRoutes(navigation,"home");
+        //  server update
+        console.log(currentNote)
+         await editNotes(account.uid,currentNote.id,note.title,note.content);
       }
     }
     useEffect(()=>{
-       console.log(noteContext.id !== null)
-      if(noteContext.id !== null ){
-        setIsLoading(true)
-      getNote(account.uid,noteContext.id)
-      .then(document => {
-        if(document){
-          const note = document.data;
-        const content = note.content;
-        const title = note.title;
+      console.log("notescreen useEffect")
+      const selectedItem = notes.filter(note=> note.isSelected === true );
+      console.log(selectedItem)
+      const isSelectedItemHasLength =selectedItem.length === 0 ? false : true;
+      console.log(isSelectedItemHasLength)
+      
+      setIsSelectedItem((prev)=> isSelectedItemHasLength )
+      const currentNote = selectedItem[0]
+      setCurrentNote(currentNote)
+      
+    },[notes])
+   
+    useEffect(()=>{
+      console.log("isSelectedItem :",isSelectedItem);
+      
+       
+      
+      if(isSelectedItem === true){
+        console.log(currentNote.title)
+        console.log("woii")
         setNote({
-          title,
-          content
+          title:currentNote.title,
+          content:currentNote.content
         })
-        }
+        console.log( "note sudah ter set")
         
-      })
-      .catch(error=>console.error("error was happening while fetching data :",error))
-      .finally(setIsLoading(false))
       }else{
         console.log("no notes selected")
       }
       
-    },[account])
-    useEffect(()=>{
-      console.log(
-        `title:${note.title} 
-        content:${note.content}
-        `)  
-    },[note])
-    useEffect(()=>{
-      console.log("account state is changin in noteScreenJs")
-      
-    },[account])
-    // for checking the noteContext id
-    // useEffect(()=>{
-      
-    //   console.log("id :",noteContext.id)
-    // },[noteContext])
+    },[isSelectedItem,currentNote])
+   
   return (
     <View style={Style.container}>
         <View style={Style.headerContainer}>

@@ -1,7 +1,7 @@
 todo :
 -make the auth is connect with the firestore and the app
-- try to catching
-- try to fix the mess in your code 
+- urusin error pada delete function (cannot read title of undefineed) pada homescreen
+- ubah id notes yang di save menjadi id yang kita buat sendiri 1,2,3,4,5 sesuai index+1
 - add more information in your code to make it more readable
 - commit to github
 

@@ -16,6 +16,7 @@ async function uploadsNote(userId,title,content){
     })
     
     console.log("note succes to be added with id :",docRef.id)
+    return {id:docRef.id}
    } catch (error) {
     console.error("ups.. ada yang salah pada logika upload")
     console.error(error)
