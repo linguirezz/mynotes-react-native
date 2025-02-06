@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { theme } from "./dashboard/theme";
 const styles = StyleSheet.create({
     container: {
       flex: 1,

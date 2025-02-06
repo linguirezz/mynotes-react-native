@@ -63,6 +63,9 @@ async function getNote(userId,docId) {
 async function editNotes(userId,noteId,title,content){
     
     try {
+    console.log(
+        `userId :${userId}\n noteId:${noteId}\n title:${title} content:${content}`
+    )
     const notesDocRef = doc(db,`users/${userId}/notes/${noteId}`)
 
     await updateDoc(notesDocRef,{

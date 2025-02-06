@@ -1,8 +1,9 @@
 import {useState,useEffect} from 'react'
 import { Text, View,TextInput,Image, TouchableOpacity,Button } from 'react-native';
-import { signInUser } from '../../services/authServices';
+import { getCurrentUser, signInUser } from '../../services/authServices';
 import styles from '../../styles/styles';
 import { navigateAndKeepTheRoutes, navigateAndResetAllRoutes } from '../../navigation/navigationFunction';
+import { useAuthContext } from '../../contexts/authContext';
 
 
 function LoginScreen({navigation}) {
@@ -10,21 +11,25 @@ function LoginScreen({navigation}) {
     email:"",
     password:""
 });
+const {setAccount} = useAuthContext()
 handleCredential= (key,value)=>{
     setCredential({...credential,[key]:value})
 }
-handleSubmit = ()=>{
+handleSubmit = async()=>{
     const {email,password} = credential
+
     console.log(`email : ${email} \n password:${password}`)
     try {            
-        const response = signInUser(navigation,email,password);
-        console.log(response)
-        if(response){
-          
-          console.log("user succes to logged in reload the app to se the change");
-        
-        }
-        
+      // sign in 
+      const response = await signInUser(navigation,email,password);
+      // set the auth global state
+        const user =await getCurrentUser()
+        console.log("user uid (loginScreen 22): ", user.uid)
+        setAccount({
+          uid: user.uid,
+          isGuest:false
+        })
+        navigateAndResetAllRoutes(navigation,"home")
       } catch (error) {
         console.error(error)
     }

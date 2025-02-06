@@ -42,9 +42,11 @@ export  function AuthProvider({ children }) {
            console.error(error);
        }
     }
+    // checking the account state
     useState(()=>{
-       checkIfAccountExist()
-    },[])
+       console.log(account)
+    },[account])
+    useState(()=>{},[account])
     return (
         <AuthContext.Provider value={{ account, setAccount }}>
             {children}

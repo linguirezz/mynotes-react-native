@@ -1,7 +1,7 @@
 todo :
--make the auth is connect with the firestore and the app
-- urusin error pada delete function (cannot read title of undefineed) pada homescreen
-- ubah id notes yang di save menjadi id yang kita buat sendiri 1,2,3,4,5 sesuai index+1
+- make the auth is connect with the firestore and the app and add the google login service
+- make the auth screen theme matching with the pallete
+- rilis versi 0.0.1
 - add more information in your code to make it more readable
 - commit to github
 

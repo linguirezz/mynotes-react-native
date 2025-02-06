@@ -39,17 +39,21 @@ function HomeScreen({navigation}) {
   }
   const handleDeleteNote = async()=>{
     console.log("handleDeleteNotes")
-    const id = selectedItem.id;
-    const index = selectedItem.index;
-    setNotes(notes.filter((note) => note.id !== id ));
+    
+    
+    
+    setNotes((prevNotes)=>prevNotes.filter((note) => note.isSelected !== true ));
+    console.log("pek")
     setIsMenuVisible(false)
    await deleteNote(account.uid,id)
   }
   const handleLongPress = async(id,event)=>{
+    console.log("long pressed")
+    console.log("id selected :",id)
     Vibration.vibrate(50);
     setIsMenuVisible(true);
     console.log(id)
-    setNotes(notes.map((note)=>{note.id === id ? {...note,isSelected:true}:note}))
+    setNotes((prevNotes)=>prevNotes.map((note)=>{console.log("is item Selected :",note.id === id);return note.id === id ? {...note,isSelected:true}:note}))
     setMenuPosition(
       {
         x:event.nativeEvent.pageX,
@@ -60,15 +64,27 @@ function HomeScreen({navigation}) {
   }
   const handlePress =(id)=>{
     try {
-      console.log(id);
+      console.log("id selected",id);
       const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:true}:note});
-      console.log(updatedNotesSelected)
+      console.log("note selected before edit :",updatedNotesSelected)
       setNotes(updatedNotesSelected);
     navigateAndResetAllRoutes(navigation,"note")  
     } catch (error) {
       console.error("error terjadi pada fungsi handlePress:",error)
     }
+  const handleAddNoteBtn = ()=>{
+    setNotes((prevNotes) =>
+      prevNotes.map(note => ({
+        ...note,
+        isSelected: false
+      }))
+    );
+    navigateAndResetAllRoutes(navigation,"note")
+  }
+  const handlePin = (id,index)=>{
     
+  }
+  useEffect(()=>{console.log(account)},[]);
   }
   return (
         <View  style={Style.container}>
@@ -76,9 +92,18 @@ function HomeScreen({navigation}) {
         
         <View style={Style.headerContainer}>
         <Text style={Style.header} >My Notes</Text>
-        <TouchableOpacity>
-        <View style={Style.profile}></View>
-        </TouchableOpacity>
+      {/* login Button (check if user guest or not) */}
+      {account.isGuest ?  
+       <TouchableOpacity onPress={()=>{navigateAndResetAllRoutes(navigation,"login")}}>
+       <Text style={Style.profile}>Login</Text>
+       </TouchableOpacity >
+        :
+        <TouchableOpacity >
+        <View style={Style.profile}>
+          
+        </View>
+        </TouchableOpacity >
+       }
         
         </View>
         <View style={Style.searchBar}>
@@ -96,7 +121,7 @@ function HomeScreen({navigation}) {
        {console.log(note);return index % 2 === 0 ? ( // genap: squareBox
           <TouchableOpacity
             style={Style.squareBox}
-            key={note.id}
+            key={index}
             onLongPress={(event) => handleLongPress(note.id, event)}
             onPress={()=>{handlePress(note.id)}}
             delayLongPress={500}
@@ -109,11 +134,11 @@ function HomeScreen({navigation}) {
 
     {/* Kelompok notes persegi panjang (indeks ganjil) */}
     <View>
-      {notes.map((note, index) =>{console.log(index);
+      {notes.map((note, index) =>{console.log("index :",index);
        return index % 2 !== 0 ? ( // ganjil: rectangleBox
           <TouchableOpacity
             style={Style.rectangleBox}
-            key={note.id}
+            key={index}
             onLongPress={(event) => handleLongPress(note.id, event)}
             delayLongPress={500}
             onPress={()=>{handlePress(note.id)}}
@@ -142,11 +167,6 @@ function HomeScreen({navigation}) {
            onPress={handleDeleteNote}
            >
            <Text>delete</Text>
-         </TouchableOpacity>
-         <TouchableOpacity style={
-           {flex:1,margin:5}
-           }>
-           <Text>edit</Text>
          </TouchableOpacity>
          <TouchableOpacity style={
            {flex:1,margin:5}

@@ -1,140 +1,109 @@
-import React, { useState ,useEffect} from 'react'
-import {  View ,TextInput, Touchable, TouchableOpacity,Text,Modal,} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, TextInput, TouchableOpacity, Text, ScrollView } from 'react-native'
 import { Style } from '../../styles/dashboard/notes/style'
-import { ScrollView } from 'react-native-gesture-handler'
 import { theme } from '../../styles/dashboard/theme'
-import { editNotes, getNote, uploadsNote } from '../../services/firestoreServices'
-import { getCurrentUser } from '../../services/authServices'
+import { editNotes, uploadsNote } from '../../services/firestoreServices'
 import { navigateAndResetAllRoutes } from '../../navigation/navigationFunction'
 import { useNoteContext } from '../../contexts/notesContext'
 import { useAuthContext } from '../../contexts/authContext'
-function NoteScreen({navigation}) {
-  const [note,setNote] =useState(
-    {
-      title:"",
-      content:""
-    })
-    const [isLoading,setIsLoading] = useState(false)
-    const [isSelectedItem,setIsSelectedItem] = useState(false);
-    const [currentNote,setCurrentNote] = useState(false);
 
-    // CONTEXT
-    const {notes,setNotes} = useNoteContext();
-    const {account} = useAuthContext()
-    // HANDLE FUNCTION
-    const handleNote =(key,value)=>{
-    setNote({...note,[key]:value}) 
-   }
-    const handleSave= async  ()=>{
-     console.log(isSelectedItem) 
-      if(isSelectedItem === false){
-        const {title,content}= note
-        console.log("data will be saved")
-        console.log("data :",note)
-        
+function NoteScreen({ navigation }) {
+  const [note, setNote] = useState({ title: "", content: "" })
+  const [currentNote, setCurrentNote] = useState(null)
+  const { notes, setNotes } = useNoteContext()
+  const { account } = useAuthContext()
+
+  // Handle input changes
+  const handleNote = (key, value) => {
+    setNote(prev => ({ ...prev, [key]: value }))
+  }
+
+  // Handle save/update note
+  const handleSave = async () => {
+    try {
+      const { title, content } = note
       
+      if (currentNote) {
+        // Update existing note
+        // client
+        setNotes(prevNotes => 
+          prevNotes.map(note => 
+            note.id === currentNote.id ? { ...note, title, content,isSelected:false } : note
+          )
+        )
+        
         navigateAndResetAllRoutes(navigation,"home")
-        // server update
-        const notesUploaded = await uploadsNote(account.uid,title,content)
-        const docId = notesUploaded.id;
-          // ui update 
-          console.log(notes)
-          setNotes((prevNotes) => [
-            ...prevNotes,
-            {
-              id: docId,
-              title: title,
-              content: content,
-              isSelected: false
-            }
-          ]);
-        // id update
-      //   const updateNotesList = notes.map((note)=>{
-      //     note.id === null ? {...note ,id:docId}:note
-      //   })
-        
-      //  setNotes(updateNotesList)
-      }
-      else{
-     
+        // server
+        await editNotes(account.uid, currentNote.id, title, content)
 
-        // ui update
-         const {title,content} = note
-        const updateNotesList = notes.map((item)=>{
         
-         return item.isSelected === true ? {...item,title,content} :item
-        })
-
-        console.log("data will be edited and saved");
-        setNotes(updateNotesList);
-        navigateAndResetAllRoutes(navigation,"home");
-        //  server update
-        console.log(currentNote)
-         await editNotes(account.uid,currentNote.id,note.title,note.content);
+      } else {
+        // Create new note
+        const tempId = `temp-${Math.random().toString(36).substr(2, 9)}`
+        const newNote = { id: tempId, title, content, isSelected: false }
+        
+        // Optimistic UI update
+        setNotes(prev => [...prev, newNote])
+        navigateAndResetAllRoutes(navigation, "home")
+        // Server update
+        const uploadedNote = await uploadsNote(account.uid, title, content)
+        
+        // Update with real ID
+        setNotes(prevNotes => 
+          prevNotes.map(note => 
+            note.id === tempId ? { ...note, id: uploadedNote.id } : note
+          )
+        )
       }
+      
+   
+    } catch (error) {
+      console.error("Error saving note:", error)
+      // Rollback UI update if needed
     }
-    useEffect(()=>{
-      console.log("notescreen useEffect")
-      const selectedItem = notes.filter(note=> note.isSelected === true );
-      console.log(selectedItem)
-      const isSelectedItemHasLength =selectedItem.length === 0 ? false : true;
-      console.log(isSelectedItemHasLength)
-      
-      setIsSelectedItem((prev)=> isSelectedItemHasLength )
-      const currentNote = selectedItem[0]
-      setCurrentNote(currentNote)
-      
-    },[notes])
-   
-    useEffect(()=>{
-      console.log("isSelectedItem :",isSelectedItem);
-      
-       
-      
-      if(isSelectedItem === true){
-        console.log(currentNote.title)
-        console.log("woii")
-        setNote({
-          title:currentNote.title,
-          content:currentNote.content
-        })
-        console.log( "note sudah ter set")
-        
-      }else{
-        console.log("no notes selected")
-      }
-      
-    },[isSelectedItem,currentNote])
-   
+  }
+
+  // Track selected note
+  useEffect(() => {
+    const selected = notes.find(note => note.isSelected)
+    console.log("is there any selected (noteScreen : 68) :",selected)
+    if (selected) {
+      setCurrentNote(selected)
+      setNote({ title: selected.title, content: selected.content })
+    } else {
+      setCurrentNote(null)
+      setNote({ title: "", content: "" })
+    }
+  }, [notes])
+
   return (
     <View style={Style.container}>
-        <View style={Style.headerContainer}>
-            <TouchableOpacity style={Style.headerBtn} onPress={handleSave}>
-                 <Text>hai</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={Style.headerBtn}>
-
-            </TouchableOpacity>
-        </View>
-        <ScrollView >
-            <TextInput 
-            onChangeText={(text)=>{handleNote("title",text)}}
-            style={Style.titleInput}
-             placeholder='Write title...'
-            placeholderTextColor={theme.colors.lowLightText} 
-            multiline={true}
-            value={note.title}
-            />
-            <TextInput 
-            onChangeText={(text)=>{handleNote("content",text)}}
-             style={Style.notesInput} 
-             placeholder='Write your notes here...'
-             multiline={true} // Mengaktifkan multiline
-             textAlignVertical="top"
-             placeholderTextColor={theme.colors.lowLightText}
-             value={note.content}
-             />
-        </ScrollView>
+      <View style={Style.headerContainer}>
+        <TouchableOpacity style={Style.headerBtn} onPress={handleSave}>
+          <Text>{currentNote ? "Update" : "Save"}</Text>
+        </TouchableOpacity>
+      </View>
+      
+      <ScrollView>
+        <TextInput
+          value={note.title}
+          onChangeText={text => handleNote("title", text)}
+          style={Style.titleInput}
+          placeholder="Write title..."
+          placeholderTextColor={theme.colors.lowLightText}
+          multiline
+        />
+        
+        <TextInput
+          value={note.content}
+          onChangeText={text => handleNote("content", text)}
+          style={Style.notesInput}
+          placeholder="Write your notes here..."
+          multiline
+          textAlignVertical="top"
+          placeholderTextColor={theme.colors.lowLightText}
+        />
+      </ScrollView>
     </View>
   )
 }
