@@ -1,13 +1,17 @@
+version alpha 0.1.0 :
+- read , edit ,write , and delete notes
+- authentication 
 todo :
-- make the auth is connect with the firestore and the app and add the google login service
-- make the auth screen theme matching with the pallete
-- rilis versi 0.0.1
-- add more information in your code to make it more readable
-- commit to github
 
-target :
-10.00
+- fitur pin (next update)
+- forgot password
+- make the a loading screen and loading element 
+- make the add button do not collide with keyboard
+- make the content can be write
+- add more information in your code to make it more readable (refactoring)
+- rilis versi alpha 0.1.0
 
-yarn add @react-navigation/native yarn add @react-navigation/stack yarn add react-native-screens react-native-safe-area-context
+
+
 
 

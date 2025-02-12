@@ -2,7 +2,7 @@ import { getFirestore,collection,addDoc,serverTimestamp,getDocs,getDoc, updateDo
 import app from "../firebase.js";
 import { navigateAndResetAllRoutes } from "../navigation/navigationFunction.js";
 const db = getFirestore(app)
-console.log("hello world")
+
 // create
 async function uploadsNote(userId,title,content){
    try {

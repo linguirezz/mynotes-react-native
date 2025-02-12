@@ -1,10 +1,20 @@
 import app from "../firebase.js"
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import { useAuthRequest } from 'expo-auth-session';
+import * as Constants from 'expo-constants';
+import { useEffect } from "react";
+// import {GOOGLE_EXPO_WEB_CLIENT_ID} from "@env"
 import { createUserWithEmailAndPassword,
     getAuth,
     sendEmailVerification,
     signInWithEmailAndPassword,
     reload,
-    signInAnonymously
+    signInAnonymously,
+    signOut,
+    sendPasswordResetEmail,
+    confirmPasswordReset,
+    GoogleAuthProvider
     
  } from "firebase/auth"
 import { navigateAndResetAllRoutes } from "../navigation/navigationFunction.js";
@@ -12,21 +22,7 @@ const auth = getAuth(app)
 async function signInUser(navigation,email,password){
   try { 
       const response = await signInWithEmailAndPassword(auth,email,password);
-      const isVerified = response.isVerified
-    if(response){
-        console.log("user has been succed to signIn !!!!")
-        console.log("with response : ",response)
-        console.log("navigating to verify route ....")
-        if(isVerified){
-          console.log("navigating to verify screen ....")
-          navigateAndResetAllRoutes(navigation,"verify")
-        }
-        else{
-          console.log("navigating to home screen ....")
-          navigateAndResetAllRoutes(navigation,"home")
-        }
-        
-      }
+      return response
   } catch (error) {
     console.error("ada kesalahan di fungsi signin user!!!")
     console.error(error)
@@ -74,19 +70,22 @@ async function createUser(navigation,email,password){
   }
   
 
-async function getCurrentUser(){
-    try {        
-        const user = auth.currentUser
-        console.log(`current user ${JSON.stringify(user)}`)
+ function getCurrentUser(){
+          
+        const user = auth.currentUser || null
+        if(user){
+          console.log("curren User (authService : 67) :" ,user)
         return user
-    } catch (error) {
-        console.error("terdapat error di fungsi getCurrentUser")
-        console.error(error)
-    }
+        }
+        else{
+          console.log("tidak ada current user (auth service : 81)")
+        }
+        
+  
 }
 async function refreshEmailVerifiedStatus(){
   try {
-    const user = auth.currentUser
+    const user =  auth.currentUser
     if(user){
      await user.reload()
       console.log("user ditemukan!!")
@@ -108,21 +107,68 @@ async function sendEmailVerifyNotification(){
   try {
     const user = auth.currentUser
     await sendEmailVerification(user)
+    console.log("email has been sended")
   } catch (error) {
     console.error("ada kesalahan pada fungsi sendEmailVerification")
     console.error(error)
   }  
 }
 // signOutUser
-async function signOutUser(navigation,email,password){
+async function signOutUser(){
     try { 
-         await signOut();
+         await signOut(auth);
           console.log("user has been succed to signOut !!!!")          
-      
     } catch (error) {
       console.error("ada kesalahan pada fungsi signOutUser")
       console.error(error)
     }
   }
+// reset email
+async function resetEmail(email){
+  try {
+    if(email){
+      console.log("resesting the email... (authContext : 118)")
+    const response = await  sendPasswordResetEmail(auth,email)
+    
+    console.log("succes to send password reset to ",email,"(authContext : 120)")
+    return true
+    }
+    else{
+      console.error("email is not found (authProvider : 126)")
+      return null
+    }
+    
+  } catch (error) {
+    console.error("ada kesalahan pada fungsi sendPasswordResetEmail");
+    console.error(error)    
+  }
 
-  export {createUser,signInUser,sendEmailVerifyNotification,refreshEmailVerifiedStatus,signOutUser,getCurrentUser,signInAsGuestAccount}
+}
+// confirm reset password
+async function confirmResetPassword(verifCode,newPassword){
+  try {
+    if (verifCode && newPassword){
+      console.log("confirming reset password");
+      await confirmPasswordReset(auth,verifCode,newPassword)  
+      console.log( console.log("succes to confirm user password (authContext : 120)"))
+    }
+    else{
+      console.error("some parameter is not found (authProvider : 142)")
+    }
+  } catch (error) {
+    console.error("ada kesalahan pada fungsi confirmResetPassword");
+    console.error(error)   
+  }  
+}
+
+export {createUser,
+  signInUser,
+  sendEmailVerifyNotification,
+  refreshEmailVerifiedStatus,
+  signOutUser,
+  getCurrentUser,
+  signInAsGuestAccount,
+  resetEmail,
+  confirmResetPassword,
+
+}

@@ -1,39 +1,77 @@
 import {useState,useEffect} from 'react'
 import { Text, View,TextInput,Image, TouchableOpacity,Button } from 'react-native';
-import { getCurrentUser, signInUser } from '../../services/authServices';
+import { getCurrentUser, resetEmail, signInUser,sendEmailVerifyNotification } from '../../services/authServices';
 import styles from '../../styles/styles';
 import { navigateAndKeepTheRoutes, navigateAndResetAllRoutes } from '../../navigation/navigationFunction';
 import { useAuthContext } from '../../contexts/authContext';
+import { Style } from '../../styles/dashboard/notes/style';
+import { theme } from '../../styles/dashboard/theme';
 
 
-function LoginScreen({navigation}) {
+function LoginScreen({navigation})  {
   const [credential,setCredential]= useState({
     email:"",
     password:""
 });
+
 const {setAccount} = useAuthContext()
+
+
+
 handleCredential= (key,value)=>{
     setCredential({...credential,[key]:value})
 }
 handleSubmit = async()=>{
     const {email,password} = credential
-
+    if (!password.trim()) {
+      alert('Password tidak boleh kosong!');
+      return;
+    }
     console.log(`email : ${email} \n password:${password}`)
     try {            
       // sign in 
       const response = await signInUser(navigation,email,password);
-      // set the auth global state
-        const user =await getCurrentUser()
-        console.log("user uid (loginScreen 22): ", user.uid)
-        setAccount({
-          uid: user.uid,
-          isGuest:false
-        })
-        navigateAndResetAllRoutes(navigation,"home")
+      console.log("response (loginScreen :27) :", response)
+      // checking if user succes to login first
+      if(response){ 
+        const user = getCurrentUser()
+        // verify the user
+        if(user){
+          console.log("isVerified (loginScreen : 32): ",user.emailVerified)
+          if(!user.emailVerified){
+            console.log("user's email is not verified ,sending user to verify screen (LoginScreen : 29)");
+            await sendEmailVerifyNotification();
+            console.log("sending you to the verify screen (loginScreen : 37)")
+            navigateAndKeepTheRoutes(navigation,"verify")
+          }
+          // set the auth global state
+            console.log("user uid (loginScreen 22): ", user.uid)
+            setAccount({
+              uid: user.uid,
+              isGuest:false
+            })
+            navigateAndResetAllRoutes(navigation,"home")
+        }
+        else{
+          console.log("user is not found (loginScreen : 47)")
+        }
+       
+      }
+     
       } catch (error) {
         console.error(error)
     }
 }
+
+const handleGoogleLogin = async ()=>{
+// fix thisssss 
+    
+   
+   
+  
+ 
+}
+
 useEffect(()=>{   
     console.log(`credential typed: ${JSON.stringify(credential)} `) ;
 },[credential])
@@ -43,47 +81,54 @@ useEffect(()=>{
     <Text style={styles.HeaderStyle}>Let's start!</Text>
 
        {/*sub header  */}
-    <Text numberOfLines={2} style={styles.SubHeaderStyle} >Sign in to your account to get of various access</Text>{/** h2 */}
+    <Text numberOfLines={2} style={[styles.secondaryText,{marginBottom:40}]} >Sign in to your account to get of various access</Text>{/** h2 */}
        {/* input email */}
     <View style={styles.InputContainer}>
      <Image source={require("../../assets/favicon.png")} style={{width:25, height :25, alignSelf:"center" , marginRight:10}}/>
-     <TextInput placeholder="Enter your email" placeholderTextColor="#B0C4DE" style={{width:"100%"}} onChangeText={(text)=>{handleCredential("email",text)}}/>
+     <TextInput placeholder="Enter your email" placeholderTextColor={"#B0C4DE"} style={styles.textInput} onChangeText={(text)=>{handleCredential("email",text)}}/>
     </View>
        {/* input password */}
     <View style={styles.InputContainer}>
      <Image source={require("../../assets/favicon.png")} style={{width:25 ,alignSelf:"center", height :25  , marginRight:10 }}/>
-     <TextInput placeholder="password" secureTextEntry={true} placeholderTextColor="#B0C4DE" style={{width:"100%"}} onChangeText={(text)=>{handleCredential("password",text)}}/>
+     <TextInput  placeholder="password" autoCapitalize="none" autoCorrect={false} secureTextEntry={true} placeholderTextColor="#B0C4DE" style={styles.textInput} onChangeText={(text)=>{handleCredential("password",text)}}/>
     </View>
        {/* forgot password text */}
-    <TouchableOpacity>
-     <Text>Forgot Password</Text>
-    </TouchableOpacity>
-    {/* submit button */}
-    <Button title='Log In' onPress={()=>{handleSubmit()}}/>
+    <TouchableOpacity onPress={()=>{navigateAndKeepTheRoutes(navigation,"recovery-email")}} >
+    <Text style={[styles.anchorText,{fontSize:13,marginBottom:5,marginLeft:"auto"}]}>Forgot Password</Text>
+    </TouchableOpacity >
+    {/* login button */}
+    <TouchableOpacity  style={styles.submitBtn} title='Log In' onPress={()=>{handleSubmit()}}>
+        <Text style={styles.submitBtnText}> Log In </Text>
+      </TouchableOpacity>
     {/* or element */}
    <View>
      <View></View>
-     <Text>or login with</Text>
+     <Text style={[styles.secondaryText,{marginVertical:20}]}>or </Text>
      <View></View>
    </View>
    {/* other login option buttons group */}
    <View>
-     <TouchableOpacity >
-       <Image source={require("../../assets/favicon.png")}/>
-       <Text>facebook</Text>
+     <TouchableOpacity style={styles.googleBtn} onPress={()=>{alert("login with google is under development,please wait for the next update ")}}>
+       {/* <Image source={require("../../assets/favicon.png")}/> */}
+       <Text style={{fontSize:17,fontWeight:"600"}}>Login With Google</Text>
      </TouchableOpacity>
-     <TouchableOpacity >
+     {/* <TouchableOpacity >
        <Image source={require("../../assets/favicon.png")}/>
-       <Text>google</Text>
-     </TouchableOpacity>
+       <Text style={{fontSize:17,fontWeight:"600",color:"white"}}>facebook</Text>
+     </TouchableOpacity> */}
    </View>
   {/* suggest if client has no account */}
-   <Text>
-     Dont have an account ?
-   </Text>
-   <Button title='Sign Up' onPress={()=>{
-      navigateAndResetAllRoutes(navigation,"register")
-   }}/>
+      
+   {/* <Text style={[styles.secondaryText,{marginTop:"auto"}]}>
+     Dont have an account ? 
+   </Text> */}
+   <View style={[{marginTop:"auto",marginBottom:40,flexDirection:"row",justifyContent:"center"}]}>
+    <Text style={[styles.secondaryText]}> don't you have an account ? </Text>
+   <TouchableOpacity  onPress={()=>{navigateAndResetAllRoutes(navigation,"register")}}> 
+    <Text style={styles.anchorText}>register</Text> 
+    </TouchableOpacity> 
+   </View>
+   
    </View> 
   )
 }

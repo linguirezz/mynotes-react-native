@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import { signInAsGuestAccount } from "../services/authServices";
 import { getData, storeData } from "../services/asyncStorage";
@@ -12,22 +12,26 @@ export  function AuthProvider({ children }) {
         uid: "",
         isGuest:true
     });
-    const checkIfAccountExist = async ()=>{
-        console.log("hey hey")
-        try {
+    const creatingGuestAccountIfUserIsAGuest = async ()=>{
+        console.log("auth provider running (authContext : 16)")
+    
             // mengecek apakah user mempunyai akun atau belum
        const accountInAsyncStorage = await getData("account")
        console.log("akun yang tersimpan pada asyncStorage",accountInAsyncStorage)
-       if(accountInAsyncStorage["uid"] === null ){
+       if(accountInAsyncStorage && accountInAsyncStorage.uid ){
             // jika akun ada
-           console.log("account ditemukan !" , account)
-           setAccount(accountInAsyncStorage);
+            console.log("akun ditemukan !! (authCotenxt : 23)")
+            
+            setAccount(prevAccount => ({ ...prevAccount, ...accountInAsyncStorage }));
+
        }
        else{
            // jika akun tidak ditemukan
            console.log("membuat akun guest untuk user")
-            signInAsGuestAccount()
+           try {
+             signInAsGuestAccount()
             .then(response=>{
+                console.log("")
                console.log("sign in sebagai tamu berhasil dengan respon berikut: ",response);
                const responsWithSomeFormat = {
                 uid:response.uid,
@@ -36,17 +40,23 @@ export  function AuthProvider({ children }) {
                setAccount(responsWithSomeFormat);
                storeData("account",account);
            })
+           .catch(error=>console.error(error))
+        } catch (error) {
+            console.error("there is some errors on auth provider");
+            console.error(error);
+        }
        }
-       } catch (error) {
-           console.error("there is some errors on auth provider");
-           console.error(error);
-       }
+      
     }
+   useEffect(()=>{
+    creatingGuestAccountIfUserIsAGuest()
+},[])
     // checking the account state
-    useState(()=>{
-       console.log(account)
+   
+    useEffect(()=>{
+       console.log("current account :",account)
     },[account])
-    useState(()=>{},[account])
+   
     return (
         <AuthContext.Provider value={{ account, setAccount }}>
             {children}

@@ -112,17 +112,26 @@ const styles = StyleSheet.create({
     width:80,
     height:"auto",
     position: 'absolute',
-    backgroundColor: colors.lightBox,
+    backgroundColor: "#242323",
     borderRadius: 8,
     padding: 10,
     flexDirection:"column",
-    justifyContent:"space-between"
+    justifyContent:"space-between",
+    borderRadius:10,
+    
   },
   noteTitle:{
     fontWeight:"bold",
     fontSize:20,
     color:"white"
+  },
+  loginButton:{
+    backgroundColor: colors.button,
+    paddingHorizontal:15,
+    paddingVertical:10,
+    borderRadius:8,
+
   }
 });
-
+  
 export default styles;

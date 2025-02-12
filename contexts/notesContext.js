@@ -14,7 +14,7 @@ export function NoteProvider({ children }) {
         setIsLoading(true)
         // creating guest account
         
-          console.log("account",account.uid)
+          console.log("account (notesContext : 17)",account.uid)
           console.log(account.uid == true)
           if(account.uid){
             getNotes(account.uid).then(data=>{
@@ -40,7 +40,7 @@ export function NoteProvider({ children }) {
             .catch(error=>console.error("error was happening while fetching data :",error))
             .finally(setIsLoading(false))
           }
-      },[])
+      },[account])
       useEffect(()=>{
         console.log("notes state changed")
         console.log(notes)

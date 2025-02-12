@@ -17,6 +17,13 @@ function HomeScreen({navigation}) {
     x:0,
     y:0
   });
+  const [profileMenu,setProfileMenu]=useState({
+    position:{
+      x:0,
+      y:0
+    },
+    isVisible : false
+  });
   // CONTEXT
   // notes context(notes id)
   const {notes,setNotes,isLoading,setIsLoading} = useNoteContext();
@@ -72,7 +79,8 @@ function HomeScreen({navigation}) {
     } catch (error) {
       console.error("error terjadi pada fungsi handlePress:",error)
     }
-  const handleAddNoteBtn = ()=>{
+  
+    const handleAddNoteBtn = ()=>{
     setNotes((prevNotes) =>
       prevNotes.map(note => ({
         ...note,
@@ -80,32 +88,74 @@ function HomeScreen({navigation}) {
       }))
     );
     navigateAndResetAllRoutes(navigation,"note")
+  } 
   }
-  const handlePin = (id,index)=>{
-    
+  const handleProfileLongPress = (event)=>{
+
+    const newX = event.nativeEvent.pageX;
+    const newY = event.nativeEvent.pageY;
+    console.log("x :",newX)
+    console.log("y :",newY)
+    setProfileMenu((prevState) => ({
+      ...prevState,
+      position: { x: newX, y: newY },
+      isVisible:true
+    }));
+  };
+  const handleLogout= async()=>{
+    console.log("handleLogout (homescreen : 106)")
+    setProfileMenu((prev)=>({...prev,isVisible:false}))
+    navigateAndResetAllRoutes(navigation,"login")
+    await signOutUser()
+
   }
-  useEffect(()=>{console.log(account)},[]);
-  }
+   
+ 
+ 
   return (
         <View  style={Style.container}>
             <ScrollView style={Style.scrollView}  >
         
         <View style={Style.headerContainer}>
         <Text style={Style.header} >My Notes</Text>
-      {/* login Button (check if user guest or not) */}
-      {account.isGuest ?  
-       <TouchableOpacity onPress={()=>{navigateAndResetAllRoutes(navigation,"login")}}>
-       <Text style={Style.profile}>Login</Text>
-       </TouchableOpacity >
+      {/* {check if user guest or not} */}
+         {account.isGuest ?  
+           // login button
+           <TouchableOpacity style={Style.loginButton} onPress={()=>{navigateAndResetAllRoutes(navigation,"login")}}>
+           <Text style={{color:"#ffffff", fontWeight:"800" }}>Login</Text>
+           </TouchableOpacity >
         :
-        <TouchableOpacity >
+         
+             // profile button
+        <TouchableOpacity onLongPress={handleProfileLongPress} >
         <View style={Style.profile}>
-          
         </View>
         </TouchableOpacity >
        }
-        
         </View>
+        {/* profile menu */}
+        <Modal transparent visible={profileMenu.isVisible} >
+       <TouchableOpacity style={Style.menuOverLay} activeOpacity={1} onPress={()=>{setProfileMenu((prev)=>({...prev,isVisible:false}))}}>
+       <View style={[Style.menu ,{right:15 ,top:80,}]} >
+          
+         <TouchableOpacity style={
+           {flex:1,margin:5}
+           }
+           onPress={handleLogout}
+           >
+           <Text style={[{color:theme.colors.dangerText,fontWeight:"600"}]}>Log out</Text>
+         </TouchableOpacity>
+         {/* <TouchableOpacity style={
+           {flex:1,margin:5}
+           }>
+           <Text>pin</Text>
+         </TouchableOpacity> */}
+         
+       </View>
+      
+        </TouchableOpacity>
+       </Modal>
+        {/* search bar */}
         <View style={Style.searchBar}>
           <View style={Style.searchphotoBar}></View>
           <TextInput style={Style.barTextInput} placeholder='Search Notes' placeholderTextColor={"#4B527A"} />
@@ -159,20 +209,20 @@ function HomeScreen({navigation}) {
      {/* edit menu */}
        <Modal transparent visible={isMenuVisible} >
        <TouchableOpacity style={Style.menuOverLay} activeOpacity={1} onPress={()=>{setIsMenuVisible(false)}}>
-       <View style={[Style.menu ,{left:menuPosition.x +30,top:menuPosition.y -150}]} >
+       <View style={[Style.menu ,{left:menuPosition.x +50,top:menuPosition.y -130}]} >
           
          <TouchableOpacity style={
            {flex:1,margin:5}
            }
            onPress={handleDeleteNote}
            >
-           <Text>delete</Text>
+           <Text style={[{color:theme.colors.dangerText,fontWeight:"600"}]}>delete</Text>
          </TouchableOpacity>
-         <TouchableOpacity style={
+         {/* <TouchableOpacity style={
            {flex:1,margin:5}
            }>
            <Text>pin</Text>
-         </TouchableOpacity>
+         </TouchableOpacity> */}
          
        </View>
       
