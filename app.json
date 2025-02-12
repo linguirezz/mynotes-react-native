@@ -14,7 +14,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.makethingsup.mynotes",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "intentFilters": {
@@ -45,6 +49,17 @@
         "projectId": "c04ad36a-80e9-47c6-b36c-7a388c81b15c"
       }
     },
-    "owner": "crazy_dev"
+    "owner": "crazy_dev",
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 31,
+            "buildToolsVersion": "31.0.0"
+          }
+        }
+      ]
+    ]
   }
 }
