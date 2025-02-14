@@ -4,7 +4,7 @@ version alpha 0.1.0 :
 todo :
 
 - fitur pin (next update)
-- forgot password
+- forgot password (done)
 - make the a loading screen and loading element 
 - make the add button do not collide with keyboard
 - make the content can be write

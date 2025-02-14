@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { signInAsGuestAccount } from "../services/authServices";
 import { getData, storeData } from "../services/asyncStorage";
+import LoadingScreen from "../views/dashboard/loadingScreen";
 // Membuat context
 const AuthContext = createContext();
 
@@ -12,7 +13,12 @@ export  function AuthProvider({ children }) {
         uid: "",
         isGuest:true
     });
+    // state for loading first screen
+    const [isFetching,setIsFetching]=useState(true);
+
     const creatingGuestAccountIfUserIsAGuest = async ()=>{
+        setIsFetching(true)
+       
         console.log("auth provider running (authContext : 16)")
     
             // mengecek apakah user mempunyai akun atau belum
@@ -41,6 +47,7 @@ export  function AuthProvider({ children }) {
                storeData("account",account);
            })
            .catch(error=>console.error(error))
+           .finally(setIsFetching(false))
         } catch (error) {
             console.error("there is some errors on auth provider");
             console.error(error);
@@ -53,13 +60,16 @@ export  function AuthProvider({ children }) {
 },[])
     // checking the account state
    
-    useEffect(()=>{
-       console.log("current account :",account)
-    },[account])
+    // useEffect(()=>{
+    //    console.log("current account :",account)
+    // },[account])
    
     return (
         <AuthContext.Provider value={{ account, setAccount }}>
-            {children}
+            {
+                isFetching?<LoadingScreen></LoadingScreen>:children
+            }
+            
         </AuthContext.Provider>
     );
 }

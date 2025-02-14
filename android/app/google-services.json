@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "879093687637",
+    "project_id": "notes-app-react-native-6b051",
+    "storage_bucket": "notes-app-react-native-6b051.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:879093687637:android:1ce4fffe3fb053ec58bbdc",
+        "android_client_info": {
+          "package_name": "com.makethingsup.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP6dnR84UiwXe2AuX7yTiOBJJDNHQe96I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

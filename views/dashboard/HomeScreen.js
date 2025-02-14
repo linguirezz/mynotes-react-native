@@ -110,7 +110,9 @@ function HomeScreen({navigation}) {
 
   }
    
- 
+  const handleSettingsButton= ()=>{
+     navigateAndResetAllRoutes(navigation,"settings")
+  }
  
   return (
         <View  style={Style.container}>
@@ -127,7 +129,7 @@ function HomeScreen({navigation}) {
         :
          
              // profile button
-        <TouchableOpacity onLongPress={handleProfileLongPress} >
+        <TouchableOpacity onLongPress={handleProfileLongPress} onPress={()=>{navigateAndResetAllRoutes(navigation,"profile")}}>
         <View style={Style.profile}>
         </View>
         </TouchableOpacity >
@@ -145,11 +147,13 @@ function HomeScreen({navigation}) {
            >
            <Text style={[{color:theme.colors.dangerText,fontWeight:"600"}]}>Log out</Text>
          </TouchableOpacity>
-         {/* <TouchableOpacity style={
+         <TouchableOpacity style={
            {flex:1,margin:5}
-           }>
-           <Text>pin</Text>
-         </TouchableOpacity> */}
+           }
+           onPress={handleSettingsButton}
+           >
+           <Text style={[{color:theme.colors.lowLightText,fontWeight:"600"}]}>Settings</Text>
+         </TouchableOpacity>
          
        </View>
       
@@ -161,7 +165,7 @@ function HomeScreen({navigation}) {
           <TextInput style={Style.barTextInput} placeholder='Search Notes' placeholderTextColor={"#4B527A"} />
         </View>
         {/* notes section */}
-        {isLoading ? (
+        {!account ? (
   <Text>loading...</Text> // Tampilkan teks loading
 ) : (
   <View style={Style.notesSection}>
@@ -177,6 +181,7 @@ function HomeScreen({navigation}) {
             delayLongPress={500}
           >
             <Text style={Style.noteTitle}>{note.title}</Text>
+            <Text style={Style.noteContent}>{note.content}</Text> 
           </TouchableOpacity>
         ) : null}
       )}

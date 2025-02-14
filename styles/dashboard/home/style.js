@@ -123,8 +123,15 @@ const styles = StyleSheet.create({
   noteTitle:{
     fontWeight:"bold",
     fontSize:20,
-    color:"white"
+    color:"white",
+    marginBottom:10
   },
+  noteContent:{
+   fontWeight:"400" ,
+   color:colors.lightBox,
+   fontSize:12
+  },
+
   loginButton:{
     backgroundColor: colors.button,
     paddingHorizontal:15,
@@ -132,6 +139,7 @@ const styles = StyleSheet.create({
     borderRadius:8,
 
   }
+
 });
   
 export default styles;
