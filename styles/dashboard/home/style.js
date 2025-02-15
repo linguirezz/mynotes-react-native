@@ -1,14 +1,15 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet,Dimensions } from "react-native";
 import { theme } from "../theme";
 const colors = theme.colors;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         borderRadius: 10,
         flexDirection: "column",
         backgroundColor: colors.background,
-        paddingVertical: 50,
-        paddingHorizontal: 30,
+        
+        
       },
       scrollView: {
         flex: 1,
@@ -26,11 +27,12 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     width: "100%",
-    
+    paddingHorizontal:30,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 50,
+    marginTop:50
   },
   searchBar: {
     width: "100%",
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
     right:"50%",
-    transform: [{ translateX: -10 }],
+    transform: [{ translateX: +15 }],
      // Tambahkan ini untuk menempatkan tombol di sudut kanan bawah
   },
 
@@ -138,6 +140,18 @@ const styles = StyleSheet.create({
     paddingVertical:10,
     borderRadius:8,
 
+  },
+  editMenu :{
+    position:"absolute",
+    backgroundColor:colors.box,
+    width:Dimensions.get("window").width,
+    height:50,
+    zIndex:5,
+    flex:1,
+    flexDirection:"row",
+    justifyContent:"space-around",
+    alignItems:"center",
+    paddingHorizontal : 30
   }
 
 });

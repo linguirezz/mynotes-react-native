@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { signInAsGuestAccount } from "../services/authServices";
 import { getData, storeData } from "../services/asyncStorage";
-import LoadingScreen from "../views/dashboard/loadingScreen";
+import LoadingScreen from "../views/dashboard/LoadingScreen";
 // Membuat context
 const AuthContext = createContext();
 

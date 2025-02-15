@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text,View } from 'react-native'
-function SettingsScreen() {
+function SettingsScreen({navigation}) {
   return (
     <View>
         <Text>

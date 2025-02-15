@@ -22,9 +22,9 @@ function AppNavigator() {
           {/* dashboard */}
      
           <Stack.Screen name="home" component={HomeScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }}/>
-             <Stack.Screen name="test" component={TestScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="settings" component={SettingsScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="profile" component={ProfileScreen} options={{ headerShown: false }}/>
+             {/* <Stack.Screen name="test" component={TestScreen} options={{ headerShown: false }}/> */}
          
             <Stack.Screen name="note" component={NoteScreen} options={{ headerShown: false }}/>
             {/* auth */}

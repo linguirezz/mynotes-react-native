@@ -52,7 +52,8 @@ export function NoteProvider({ children }) {
                         id : note.id,
                         title:note.data.title,
                         content:note.data.content,
-                        isSelected:false
+                        isSelected:false,
+                        isPinned:false
                   }
                 })
                 // setNotes(notesSnapshot)   
