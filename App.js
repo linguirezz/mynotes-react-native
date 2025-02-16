@@ -8,6 +8,7 @@ import { navigateAndKeepTheRoutes } from './navigation/navigationFunction.js';
 export default function App() {
 
   return (
+
    <AuthProvider>
     <NoteProvider>
      <AppNavigator/>

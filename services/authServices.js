@@ -19,7 +19,7 @@ import { createUserWithEmailAndPassword,
  } from "firebase/auth"
 import { navigateAndResetAllRoutes } from "../navigation/navigationFunction.js";
 const auth = getAuth(app)
-async function signInUser(navigation,email,password){
+async function signInUser(email,password){
   try { 
       const response = await signInWithEmailAndPassword(auth,email,password);
       return response
@@ -31,9 +31,16 @@ async function signInUser(navigation,email,password){
 async function signInAsGuestAccount(){
 try {
   const response = await signInAnonymously(auth);
-  const user = response.user;
-  const userUID = user.uid;
-  return {uid : userUID ,user}
+  if(response){
+    const user = response.user;
+    const userUID = user.uid;
+    return {uid : userUID ,user}
+  }
+  else{
+    console.log("respon null")
+    throw new Error("respon null")
+  }
+ 
 } catch (error) {
   console.error("ada kesalahan di fungsi signInAsGuestAccount user!!!")
     console.error(error)

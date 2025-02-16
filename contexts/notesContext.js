@@ -56,7 +56,7 @@ export function NoteProvider({ children }) {
                         isPinned:false
                   }
                 })
-                // setNotes(notesSnapshot)   
+                
               }
               else{
                 console.log("there are not datas detected")

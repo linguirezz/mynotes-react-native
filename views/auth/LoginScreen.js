@@ -2,7 +2,7 @@ import {useState,useEffect} from 'react'
 import { Text, View,TextInput,Image, TouchableOpacity,Button } from 'react-native';
 import { getCurrentUser, resetEmail, signInUser,sendEmailVerifyNotification } from '../../services/authServices';
 import styles from '../../styles/styles';
-import { navigateAndKeepTheRoutes, navigateAndResetAllRoutes } from '../../navigation/navigationFunction';
+import {useNavigationUtils} from '../../navigation/navigationFunction';
 import { useAuthContext } from '../../contexts/authContext';
 import { Style } from '../../styles/dashboard/notes/style';
 import { theme } from '../../styles/dashboard/theme';
@@ -15,7 +15,7 @@ function LoginScreen({navigation})  {
 });
 
 const {setAccount} = useAuthContext()
-
+const { navigateAndKeepTheRoutes, navigateAndResetAllRoutes } = useNavigationUtils();
 
 
 handleCredential= (key,value)=>{
@@ -30,7 +30,7 @@ handleSubmit = async()=>{
     console.log(`email : ${email} \n password:${password}`)
     try {            
       // sign in 
-      const response = await signInUser(navigation,email,password);
+      const response = await signInUser(email,password);
       console.log("response (loginScreen :27) :", response)
       // checking if user succes to login first
       if(response){ 
@@ -42,7 +42,7 @@ handleSubmit = async()=>{
             console.log("user's email is not verified ,sending user to verify screen (LoginScreen : 29)");
             await sendEmailVerifyNotification();
             console.log("sending you to the verify screen (loginScreen : 37)")
-            navigateAndKeepTheRoutes(navigation,"verify")
+            navigateAndKeepTheRoutes("verify")
           }
           // set the auth global state
             console.log("user uid (loginScreen 22): ", user.uid)
@@ -50,7 +50,7 @@ handleSubmit = async()=>{
               uid: user.uid,
               isGuest:false
             })
-            navigateAndResetAllRoutes(navigation,"home")
+            navigateAndResetAllRoutes("home")
         }
         else{
           console.log("user is not found (loginScreen : 47)")
@@ -93,7 +93,7 @@ useEffect(()=>{
      <TextInput  placeholder="password" autoCapitalize="none" autoCorrect={false} secureTextEntry={true} placeholderTextColor="#B0C4DE" style={styles.textInput} onChangeText={(text)=>{handleCredential("password",text)}}/>
     </View>
        {/* forgot password text */}
-    <TouchableOpacity onPress={()=>{navigateAndKeepTheRoutes(navigation,"recovery-email")}} >
+    <TouchableOpacity onPress={()=>{navigateAndKeepTheRoutes("recovery-email")}} >
     <Text style={[styles.anchorText,{fontSize:13,marginBottom:5,marginLeft:"auto"}]}>Forgot Password</Text>
     </TouchableOpacity >
     {/* login button */}
@@ -124,7 +124,7 @@ useEffect(()=>{
    </Text> */}
    <View style={[{marginTop:"auto",marginBottom:40,flexDirection:"row",justifyContent:"center"}]}>
     <Text style={[styles.secondaryText]}> don't you have an account ? </Text>
-   <TouchableOpacity  onPress={()=>{navigateAndResetAllRoutes(navigation,"register")}}> 
+   <TouchableOpacity  onPress={()=>{navigateAndResetAllRoutes("register")}}> 
     <Text style={styles.anchorText}>register</Text> 
     </TouchableOpacity> 
    </View>

@@ -10,6 +10,7 @@ import { uploadsNote,getNotes,editNotes,deleteNote } from '../../services/firest
 import { SearchBar } from 'react-native-screens'
 import { NoteProvider, useNoteContext } from '../../contexts/notesContext'
 import { useAuthContext } from '../../contexts/authContext'
+import Header from '../../components/dashboard/Header';
 
 function HomeScreen({navigation}) {
   
@@ -20,14 +21,7 @@ function HomeScreen({navigation}) {
     x:0,
     y:0
   });
-  const [profileMenu,setProfileMenu]=useState({
-    position:{
-      x:0,
-      y:0
-    },
-    isVisible : false,
-    isSelectedAll : false
-  });
+  
    const [pinnedNotes,setPinnedNotes] = useState([])
   // CONTEXT
   // notes context(notes id)
@@ -104,29 +98,10 @@ function HomeScreen({navigation}) {
     navigateAndResetAllRoutes(navigation,"note")
   } 
 
-  const handleProfileLongPress = (event)=>{
-
-    const newX = event.nativeEvent.pageX;
-    const newY = event.nativeEvent.pageY;
-    console.log("x :",newX)
-    console.log("y :",newY)
-    setProfileMenu((prevState) => ({
-      ...prevState,
-      position: { x: newX, y: newY },
-      isVisible:true
-    }));
-  };
-  const handleLogout= async()=>{
-    console.log("handleLogout (homescreen : 106)")
-    setProfileMenu((prev)=>({...prev,isVisible:false}))
-    navigateAndResetAllRoutes(navigation,"login")
-    await signOutUser()
-
-  }
+  
+ 
    
-  const handleSettingsButton= ()=>{
-     navigateAndResetAllRoutes(navigation,"settings")
-  }
+ 
   const handleCloseMenu = ()=>{
     setEditMenu((prev)=>({...prev,isVisible:false}))
     const updatedNotesSelected = notes.map((note)=>({...note,isSelected:false}));  
@@ -172,23 +147,7 @@ function HomeScreen({navigation}) {
        {
         !editMenu.isVisible ?
         // header (not in select mode)
-         <View style={Style.headerContainer}>
-        <Text style={Style.header} >My Notes</Text>
-            {/* {check if user guest or not} */}
-               {account.isGuest ?  
-                 // login button
-                 <TouchableOpacity style={Style.loginButton} onPress={()=>{navigateAndResetAllRoutes(navigation,"login")}}>
-                 <Text style={{color:"#ffffff", fontWeight:"800" }}>Login</Text>
-                 </TouchableOpacity >
-              :
-               
-                   // profile button
-              <TouchableOpacity onLongPress={handleProfileLongPress}onPress={()=>{navigateAndResetAllRoutes(navigation,"profile")}}>
-              <View style={Style.profile}>
-              </View>
-              </TouchableOpacity >
-             }
-        </View>
+        <Header />
       :
       // menu in select mode (edit menu header)
        <View style={[{ 
@@ -221,30 +180,7 @@ function HomeScreen({navigation}) {
           
        </View>
        } 
-                {/* profile menu */}
-        <Modal transparent visible={profileMenu.isVisible} >
-       <TouchableOpacity style={Style.menuOverLay} activeOpacity={1} onPress={()=>{setProfileMenu((prev)=>({...prev,isVisible:false}))}}>
-       <View style={[Style.menu ,{right:15 ,top:80,}]} >
-          
-         <TouchableOpacity style={
-           {flex:1,margin:5}
-           }
-           onPress={handleLogout}
-           >
-           <Text style={[{color:theme.colors.dangerText,fontWeight:"600"}]}>Log out</Text>
-         </TouchableOpacity>
-         <TouchableOpacity style={
-           {flex:1,margin:5}
-           }
-           onPress={handleSettingsButton}
-           >
-           <Text style={[{color:theme.colors.lowLightText,fontWeight:"600"}]}>Settings</Text>
-         </TouchableOpacity>
-         
-       </View>
-      
-        </TouchableOpacity>
-       </Modal>
+    
        {/* BODY */}
         <View style={[{paddingHorizontal:30}]}>
         {/* search bar */}
