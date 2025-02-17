@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     borderRadius:8,
 
   },
-  editMenu :{
+  toolBar :{
     position:"absolute",
     backgroundColor:colors.box,
     width:Dimensions.get("window").width,

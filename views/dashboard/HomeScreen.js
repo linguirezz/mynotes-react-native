@@ -1,8 +1,6 @@
 import React, { useEffect,useRef,useState } from 'react'
 import { View,Text,Button, TouchableOpacity, Vibration ,Modal, Dimensions} from 'react-native'
-import { Checkbox } from 'react-native-paper';
 import { signInAsGuestAccount, signOutUser } from '../../services/authServices'
-import { navigateAndKeepTheRoutes, navigateAndResetAllRoutes } from '../../navigation/navigationFunction'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import Style from '../../styles/dashboard/home/style'
 import {theme} from '../../styles/dashboard/theme'
@@ -11,8 +9,12 @@ import { SearchBar } from 'react-native-screens'
 import { NoteProvider, useNoteContext } from '../../contexts/notesContext'
 import { useAuthContext } from '../../contexts/authContext'
 import Header from '../../components/dashboard/Header';
+import { useToolBar } from '../../contexts/toolBarContext';
+import NotesGroup from '../../components/dashboard/NotesGroup';
+import { useNavigationUtils } from '../../navigation/navigationFunction';
+import { Checkbox } from 'react-native-paper'
 
-function HomeScreen({navigation}) {
+function HomeScreen() {
   
   
   const [isMenuClose,setIsMenuClose]=useState(false);
@@ -22,19 +24,14 @@ function HomeScreen({navigation}) {
     y:0
   });
   
-   const [pinnedNotes,setPinnedNotes] = useState([])
+  const [pinnedNotes,setPinnedNotes] = useState([])
   // CONTEXT
   // notes context(notes id)
   const {notes,setNotes,isLoading,setIsLoading} = useNoteContext();
   const {account,setAccount}=useAuthContext();
-  const [editMenu,setEditMenu] = useState(
-    {
-     isVisible : false
-    }
-  )
-
-  
-
+  const {toolBar,setToolBar}=useToolBar();
+  const {navigateAndKeepTheRoutes,navigateAndResetAllRoutes} =useNavigationUtils();
+ 
   // HANDLE FUNCTION
   const handleSignOut= async()=>{
    await signOutUser()
@@ -55,38 +52,13 @@ function HomeScreen({navigation}) {
     console.log("handleDeleteNotes")
     const remainNotesAfterDelete = notes.filter((note) => note.isSelected !== true );
     // close menu
-    setEditMenu((prev) => ({ ...prev, isVisible: false }));
+    setToolBar((prev) => ({ ...prev, isVisible: false }));
     const updatedNotesSelected = remainNotesAfterDelete.map((note)=>({...note,isSelected:false}));  
      setNotes(updatedNotesSelected)
     //  server change
    await deleteNote(account.uid,id)
   }
-  const handleNoteBoxLongPress = async(id,event)=>{ 
-    Vibration.vibrate(50);   
-    setEditMenu((prevState)=>({...prevState,isVisible : true}))  
-    const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:true}:note});    
-    setNotes(updatedNotesSelected);  
-    // alert("youre long pressed the btn");
-  }
-  const handleNoteBoxPress =(id)=>{
-    if(!editMenu.isVisible ){
-      try {
-        console.log("id selected",id);
-        const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:true}:note});
-        console.log("note selected before edit :",updatedNotesSelected)
-        setNotes(updatedNotesSelected);
-      navigateAndResetAllRoutes(navigation,"note")  
-      } catch (error) {
-        console.error("error terjadi pada fungsi handleNoteBoxPress:",error)
-      }
-    
-    }else{
-      const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:!note.isSelected}:note});
-      setNotes(updatedNotesSelected);
-    }
-   
-   
-  }
+ 
 
   const handleAddNoteBtn = ()=>{
     setNotes((prevNotes) =>
@@ -95,22 +67,47 @@ function HomeScreen({navigation}) {
         isSelected: false
       }))
     );
-    navigateAndResetAllRoutes(navigation,"note")
+    navigateAndResetAllRoutes("note")
   } 
 
   
- 
+   // handleNoteBoxLongPress
+   const handleNoteBoxLongPress = async(id,event)=>{ 
+    Vibration.vibrate(50);   
+    setToolBar((prevState)=>({...prevState,isVisible : true}))  
+    const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:true}:note});    
+    setNotes(updatedNotesSelected);  
+    // alert("youre long pressed the btn");
+  }
+  // handleNoteBoxPress
+  const handleNoteBoxPress =(id)=>{
+    if(!toolBar.isVisible ){
+      try {
+        console.log("id selected",id);
+        const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:true}:note});
+        console.log("note selected before edit :",updatedNotesSelected)
+        setNotes(updatedNotesSelected);
+      navigateAndResetAllRoutes("note")  
+      } catch (error) {
+        console.error("error terjadi pada fungsi handleNoteBoxPress:",error)
+      }
+    
+    }else{
+      const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:!note.isSelected}:note});
+      setNotes(updatedNotesSelected);
+    }     
+  }
    
  
   const handleCloseMenu = ()=>{
-    setEditMenu((prev)=>({...prev,isVisible:false}))
+    setToolBar((prev)=>({...prev,isVisible:false}))
     const updatedNotesSelected = notes.map((note)=>({...note,isSelected:false}));  
     setNotes(updatedNotesSelected)
   }
   const handleSelectAll = () => {
     console.log("clicked")
-    // Perbarui editMenu dan gunakan nilai baru untuk memperbarui notes
-    setEditMenu((prev) => {
+    // Perbarui toolBar dan gunakan nilai baru untuk memperbarui notes
+    setToolBar((prev) => {
       const newSelectedAll = !prev.isSelectedAll; // Nilai baru untuk isSelectedAll
       const updatedNotesSelected = notes.map((note) => ({
         ...note,
@@ -118,7 +115,7 @@ function HomeScreen({navigation}) {
       }));
       setNotes(updatedNotesSelected); // Perbarui notes
   
-      return { ...prev, isSelectedAll: newSelectedAll }; // Perbarui editMenu
+      return { ...prev, isSelectedAll: newSelectedAll }; // Perbarui toolBar
     });
   };
   const handlePinNotes= () =>{
@@ -133,19 +130,19 @@ function HomeScreen({navigation}) {
       );
        
       // Tutup menu
-      setEditMenu((prev) => ({ ...prev, isVisible: false }));
+      setToolBar((prev) => ({ ...prev, isVisible: false }));
       const updatedNotesSelected = sortedNotes.map((note)=>({...note,isSelected:false}));  
        setNotes(updatedNotesSelected)
   }
  useEffect(()=>{
-  console.log("is edit menu visible :",editMenu.isVisible)
- },[editMenu])
+  console.log("is edit menu visible :",toolBar.isVisible)
+ },[toolBar])
   return (
 <View  style={Style.container}>
           
        <ScrollView style={Style.scrollView}  >
        {
-        !editMenu.isVisible ?
+        !toolBar.isVisible ?
         // header (not in select mode)
         <Header />
       :
@@ -168,7 +165,7 @@ function HomeScreen({navigation}) {
             <View Style={[{flexDirection : "column"}]}>
             <Checkbox
                 color="white"
-                status={editMenu.isSelectedAll ? 'checked' : 'unchecked'}
+                status={toolBar.isSelectedAll ? 'checked' : 'unchecked'}
                 onPress ={handleSelectAll}
                 uncheckedColor='white'
               />
@@ -189,83 +186,7 @@ function HomeScreen({navigation}) {
               <TextInput style={Style.barTextInput} placeholder='Search Notes' placeholderTextColor={"#4B527A"} />
             </View>
         {/* notes group section */}
-           {!account ? (
-              <Text>loading...</Text> // Tampilkan teks loading
-            ) : (
-              //notes section
-            <View style={Style.notesSection}>
-              {/* Kelompok notes kotak (indeks genap) */}
-              <View>
-                {notes.map((note, index) =>
-                 {console.log(note);return index % 2 === 0 ? ( // genap: squareBox
-                    <TouchableOpacity
-                      style={Style.squareBox}
-                      key={index}
-                      onLongPress={(event) => handleNoteBoxLongPress(note.id, event)}
-                      onPress={()=>{handleNoteBoxPress(note.id)}}
-                      delayLongPress={500}  
-                    >
-                      <View style={[{flexDirection:"row" ,justifyContent:"space-between",alignItems:"center"}]}>
-                            <Text style={Style.noteTitle}>{note.title}</Text>
-                            {
-                              editMenu.isVisible&&
-                              <Checkbox
-                              color='white'
-                              status={note.isSelected ? 'checked' : 'unchecked'}
-                            />
-                            }
-                            {
-                              note.isPinned &&
-                              <View>
-                                <View style={[{
-                                  backgroundColor:"white",
-                                  width:20,
-                                  heigth:20
-                                  }]}>
-                                    <Text>p</Text>
-                                </View>
-                              </View>
-                            }
-                      </View>
-                       
-                      <Text style={Style.noteContent}>{note.content}</Text> 
-                    </TouchableOpacity>
-                  ) : null}
-                )}
-              </View>
-          
-              {/* Kelompok notes persegi panjang (indeks ganjil) */}
-              <View>
-                {notes.map((note, index) =>{console.log("index :",index);
-                 return index % 2 !== 0 ? ( // ganjil: rectangleBox
-                    <TouchableOpacity
-                      style={Style.rectangleBox}
-                      key={index}
-                      onLongPress={(event) => handleLongPress(note.id, event)}
-                      delayLongPress={500}
-                      onPress={()=>{handleNoteBoxPress(note.id)}}
-                    >
-                      
-                      <View style={[{flexDirection:"row" ,justifyContent:"space-between",alignItem:"center"}]}>
-                            <Text style={Style.noteTitle}>{note.title}</Text>
-                            {
-                              editMenu.isVisible&&
-                              <Checkbox
-                              color='white'
-                              status={note.isSelected ? 'checked' : 'unchecked'}
-                              onPress={() => setIsChecked(!isChecked)}
-                            />
-                            }
-                            
-                      </View>
-                   
-                      <Text style={Style.noteContent}>{note.content}</Text> 
-                    </TouchableOpacity>
-                  ) : null}
-                )}
-              </View>
-            </View>
-          )}
+         <NotesGroup/>
         </View>
        
         
@@ -273,9 +194,9 @@ function HomeScreen({navigation}) {
     </ScrollView>
     
     {
-      editMenu.isVisible ?
+      toolBar.isVisible ?
       // edit menu
-       <View style={[Style.editMenu,{bottom : 0} ]}>
+       <View style={[Style.toolBar,{bottom : 0} ]}>
         <TouchableOpacity onPress={handleDeleteNote}>
           <View style={[{width:30,height:30,backgroundColor:"red"}]}></View>
           </TouchableOpacity>
@@ -286,14 +207,14 @@ function HomeScreen({navigation}) {
        </View> 
       // add button 
        :
-       <TouchableOpacity style={Style.addButton} onPress={()=>{ navigateAndKeepTheRoutes(navigation,"note") }}>
+       <TouchableOpacity style={Style.addButton} onPress={()=>{ navigateAndKeepTheRoutes("note") }}>
        <Text style={Style.addButtonContent}></Text>
      </TouchableOpacity>
     }
     
      {/* edit menu */}
        <Modal transparent visible={isMenuVisible} >
-       <TouchableOpacity style={Style.menuOverLay} activeOpacity={1} onPress={()=>{;setEditMenu((prevState)=>({...prevState,isVisible : false}))}}>
+       <TouchableOpacity style={Style.menuOverLay} activeOpacity={1} onPress={()=>{;setToolBar((prevState)=>({...prevState,isVisible : false}))}}>
        <View style={[Style.menu ,{left:menuPosition.x +50,top:menuPosition.y -130}]} >
           
          <TouchableOpacity style={

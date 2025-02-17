@@ -3,15 +3,16 @@ import { View, TextInput, TouchableOpacity, Text, ScrollView } from 'react-nativ
 import { Style } from '../../styles/dashboard/notes/style'
 import { theme } from '../../styles/dashboard/theme'
 import { editNotes, uploadsNote } from '../../services/firestoreServices'
-import { navigateAndResetAllRoutes } from '../../navigation/navigationFunction'
 import { useNoteContext } from '../../contexts/notesContext'
 import { useAuthContext } from '../../contexts/authContext'
+import { useNavigationUtils } from '../../navigation/navigationFunction'
 
-function NoteScreen({ navigation }) {
+function NoteScreen() {
   const [note, setNote] = useState({ title: "", content: "" })
   const [currentNote, setCurrentNote] = useState(null)
   const { notes, setNotes } = useNoteContext()
   const { account } = useAuthContext()
+  const {navigateAndResetAllRoutes,navigateAndKeepTheRoutes} =useNavigationUtils();
 
   // Handle input changes
   const handleNote = (key, value) => {
@@ -32,7 +33,7 @@ function NoteScreen({ navigation }) {
           )
         )
         
-        navigateAndResetAllRoutes(navigation,"home")
+        navigateAndResetAllRoutes("home")
         // server
         await editNotes(account.uid, currentNote.id, title, content)
 
@@ -44,7 +45,7 @@ function NoteScreen({ navigation }) {
         
         // Optimistic UI update
         setNotes(prev => [...prev, newNote])
-        navigateAndResetAllRoutes(navigation, "home")
+        navigateAndResetAllRoutes( "home")
         // Server update
         const uploadedNote = await uploadsNote(account.uid, title, content)
         
