@@ -2,10 +2,10 @@ version alpha 0.1.0 :
 - read , edit ,write , and delete notes
 - authentication 
 todo :
-- masalah pin saat refactor notesgroup
-- make the a loading screen and loading element (otw)
+- make the logic works on the note Screen
+- start moving business logic to seperate folder
+- make a folder for each components
 - make the add button do not collide with keyboard (otw)
-- add more information in your code to make it more readable (refactoring)
 - rilis versi alpha 0.1.0
 
   refactoring strategy :
