@@ -1,10 +1,10 @@
 import React from 'react'
 import {View,Text,TouchableOpacity,Vibration} from "react-native"
 import { Checkbox } from 'react-native-paper';
-import { useNoteContext } from '../../../contexts/notesContext';
-import styles from '../../../styles/dashboard/home/style';
-import { useToolBar } from '../../../contexts/toolBarContext';
-import { useNavigationUtils } from '../../../navigation/navigationFunction';
+import { useNoteContext } from '../../../../contexts/notesContext';
+import styles from '../../../../styles/dashboard/home/style';
+import { useToolBar } from '../../../../contexts/toolBarContext';
+import { useNavigationUtils } from '../../../../navigation/navigationFunction';
 
 function SquareBoxes() {
   const {notes,setNotes} = useNoteContext();

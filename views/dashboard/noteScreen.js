@@ -6,6 +6,8 @@ import { editNotes, uploadsNote } from '../../services/firestoreServices'
 import { useNoteContext } from '../../contexts/notesContext'
 import { useAuthContext } from '../../contexts/authContext'
 import { useNavigationUtils } from '../../navigation/navigationFunction'
+import { NoteScreenComponents } from '../../utils/importUtils'
+const {NoteInput,ToolBar}  = NoteScreenComponents
 
 function NoteScreen() {
   const [note, setNote] = useState({ title: "", content: "" })
@@ -18,49 +20,6 @@ function NoteScreen() {
   const handleNote = (key, value) => {
     setNote(prev => ({ ...prev, [key]: value }))
   }
-
-  // Handle save/update note
-  const handleSave = async () => {
-    try {
-      const { title, content } = note
-      if (currentNote) {
-        // Update existing note
-        // client
-        setNotes(prevNotes => 
-          prevNotes.map(note => 
-            note.id === currentNote.id ? { ...note, title, content,isSelected:false } : note
-          )
-        )
-        
-        navigateAndResetAllRoutes("home")
-        // server
-        await editNotes(account.uid, currentNote.id, title, content)
-      } else {
-        // Create new note
-        const tempId = `temp-${Math.random().toString(36).substr(2, 9)}`
-        const newNote = { id: tempId, title, content, isSelected: false }
-        
-        // Optimistic UI update
-        setNotes(prev => [...prev, newNote])
-        navigateAndResetAllRoutes( "home")
-        // Server update
-        const uploadedNote = await uploadsNote(account.uid, title, content)
-        
-        // Update with real ID
-        setNotes(prevNotes => 
-          prevNotes.map(note => 
-            note.id === tempId ? { ...note, id: uploadedNote.id } : note
-          )
-        )
-      }
-      
-   
-    } catch (error) {
-      console.error("Error saving note:", error)
-      // Rollback UI update if needed
-    }
-  }
-
   // Track selected note
   useEffect(() => {
     const selected = notes.find(note => note.isSelected)
@@ -75,33 +34,14 @@ function NoteScreen() {
   }, [notes])
 
   return (
+    
     <View style={Style.container}>
-      <View style={Style.headerContainer}>
-        <TouchableOpacity style={Style.headerBtn} onPress={handleSave}>
-          <Text>{currentNote ? "Update" : "Save"}</Text>
-        </TouchableOpacity>
-      </View>
-      
-      <ScrollView>
-        <TextInput
-          value={note.title}
-          onChangeText={text => handleNote("title", text)}
-          style={Style.titleInput}
-          placeholder="Write title..."
-          placeholderTextColor={theme.colors.lowLightText}
-          multiline
-        />
-        
-        <TextInput
-          value={note.content}
-          onChangeText={text => handleNote("content", text)}
-          style={Style.notesInput}
-          placeholder="Write your notes here..."
-          multiline
-          textAlignVertical="top"
-          placeholderTextColor={theme.colors.lowLightText}
-        />
-      </ScrollView>
+      {/* HEAD */}
+      <ToolBar/> 
+      {/* BODY */}
+      <NoteInput/>
+      {/* ScrollAble view */}
+   
     </View>
   )
 }

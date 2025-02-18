@@ -1,8 +1,8 @@
 import React from 'react'
 import {View,TouchableOpacity,Text} from "react-native"
 import { Checkbox } from 'react-native-paper';
-import { useToolBar } from '../../../contexts/toolBarContext';
-import { useNoteContext } from '../../../contexts/notesContext';
+import { useToolBar } from '../../../../contexts/toolBarContext';
+import { useNoteContext } from '../../../../contexts/notesContext';
 function UpperToolBar() {
     const {notes,setNotes}=useNoteContext();
     const {toolBar,setToolBar} = useToolBar()

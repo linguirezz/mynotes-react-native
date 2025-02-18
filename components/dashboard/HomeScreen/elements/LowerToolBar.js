@@ -1,9 +1,9 @@
 import React from 'react'
 import {View,TouchableOpacity} from "react-native"
-import styles from '../../../styles/dashboard/home/style'
-import { deleteNote } from '../../../services/firestoreServices'
-import { useToolBar } from '../../../contexts/toolBarContext';
-import { useNoteContext } from '../../../contexts/notesContext';
+import styles from '../../../../styles/dashboard/home/style'
+import { deleteNote } from '../../../../services/firestoreServices'
+import { useToolBar } from '../../../../contexts/toolBarContext';
+import { useNoteContext } from '../../../../contexts/notesContext';
 function LowerToolBar() {
     const {notes,setNotes}=useNoteContext();
     const {setToolBar} = useToolBar()

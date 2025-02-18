@@ -1,9 +1,9 @@
 import React from 'react'
 import {Modal,TouchableOpacity,View,Text} from 'react-native'
-import styles from '../../../styles/dashboard/home/style'
-import { theme } from '../../../styles/dashboard/theme'
-import { signOutUser } from '../../../services/authServices'
-import { useNavigationUtils } from '../../../navigation/navigationFunction'
+import styles from '../../../../styles/dashboard/home/style'
+import { theme } from '../../../../styles/dashboard/theme'
+import { signOutUser } from '../../../../services/authServices'
+import { useNavigationUtils } from '../../../../navigation/navigationFunction'
 function ProfileMenu({isVisible,setProfileMenu}) {
   const {navigateAndResetAllRoutes} = useNavigationUtils(); 
   const handleLogout= async()=>{

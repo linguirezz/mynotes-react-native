@@ -1,6 +1,6 @@
 import React from 'react'
 import {View,TextInput} from "react-native"
-import styles from '../../styles/dashboard/home/style'
+import styles from '../../../styles/dashboard/home/style'
 function SearchBar() {
   return (
     <View style={styles.searchBar}>

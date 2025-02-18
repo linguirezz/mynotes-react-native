@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import styles from '../../styles/dashboard/home/style';
-import { useNavigationUtils } from '../../navigation/navigationFunction';
+import styles from '../../../styles/dashboard/home/style';
+import { useNavigationUtils } from '../../../navigation/navigationFunction';
 import ProfileMenu from './elements/ProfileMenu';
-import { useAuthContext } from '../../contexts/authContext';
+import { useAuthContext } from '../../../contexts/authContext';
 
 function Header() {
   const [profileMenu, setProfileMenu] = useState({

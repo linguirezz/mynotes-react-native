@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from "react-native"
-import { useAuthContext } from '../../contexts/authContext';
-import styles from '../../styles/dashboard/home/style';
+import { useAuthContext } from '../../../contexts/authContext';
+import styles from '../../../styles/dashboard/home/style';
 import SquareBoxes from './elements/SquareBoxes';
 import RectangleBoxes from './elements/RectangleBoxes';
 function NotesGroup() {

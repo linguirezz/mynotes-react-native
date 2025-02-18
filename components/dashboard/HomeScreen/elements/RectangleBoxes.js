@@ -1,10 +1,10 @@
 import React from 'react'
 import {View,Text,TouchableOpacity,Vibration} from "react-native"
-import { useNoteContext } from '../../../contexts/notesContext';
-import { useToolBar } from '../../../contexts/toolBarContext';
-import styles from '../../../styles/dashboard/home/style';
+import { useNoteContext } from '../../../../contexts/notesContext';
+import { useToolBar } from '../../../../contexts/toolBarContext';
+import styles from '../../../../styles/dashboard/home/style';
 import { Checkbox } from 'react-native-paper';
-import { useNavigationUtils } from '../../../navigation/navigationFunction';
+import { useNavigationUtils } from '../../../../navigation/navigationFunction';
 function RectangleBoxes() {
    const {notes,setNotes} = useNoteContext();
     const {toolBar,setToolBar}=useToolBar()
