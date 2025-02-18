@@ -21,12 +21,12 @@ function AppNavigator() {
        
           {/* dashboard */}
      
+            <Stack.Screen name="note" component={NoteScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="home" component={HomeScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="settings" component={SettingsScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="profile" component={ProfileScreen} options={{ headerShown: false }}/>
              {/* <Stack.Screen name="test" component={TestScreen} options={{ headerShown: false }}/> */}
          
-            <Stack.Screen name="note" component={NoteScreen} options={{ headerShown: false }}/>
             {/* auth */}
           <Stack.Screen name="login" component={LoginScreen} options={{ headerShown: false }}/>{/** warning!!!!! ubah kembali menjadi login screeen */}
             <Stack.Screen name="register" component={RegisterScreen} options={{ headerShown: false }}/>

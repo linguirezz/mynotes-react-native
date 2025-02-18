@@ -1,12 +1,14 @@
 import React from 'react'
-import {View,Text,TouchableOpacity} from "react-native"
+import {View,Text,TouchableOpacity,Vibration} from "react-native"
 import { useNoteContext } from '../../../contexts/notesContext';
 import { useToolBar } from '../../../contexts/toolBarContext';
 import styles from '../../../styles/dashboard/home/style';
 import { Checkbox } from 'react-native-paper';
+import { useNavigationUtils } from '../../../navigation/navigationFunction';
 function RectangleBoxes() {
    const {notes,setNotes} = useNoteContext();
     const {toolBar,setToolBar}=useToolBar()
+    const {navigateAndResetAllRoutes}=useNavigationUtils();
     // handleNoteBoxLongPress
      const handleNoteBoxLongPress = async(id,event)=>{ 
         Vibration.vibrate(50);   
@@ -23,7 +25,7 @@ function RectangleBoxes() {
             const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:true}:note});
             console.log("note selected before edit :",updatedNotesSelected)
             setNotes(updatedNotesSelected);
-          navigateAndResetAllRoutes(navigation,"note")  
+          navigateAndResetAllRoutes("note")  
           } catch (error) {
             console.error("error terjadi pada fungsi handleNoteBoxPress:",error)
           }

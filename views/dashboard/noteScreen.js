@@ -23,7 +23,6 @@ function NoteScreen() {
   const handleSave = async () => {
     try {
       const { title, content } = note
-      
       if (currentNote) {
         // Update existing note
         // client
@@ -36,8 +35,6 @@ function NoteScreen() {
         navigateAndResetAllRoutes("home")
         // server
         await editNotes(account.uid, currentNote.id, title, content)
-
-        
       } else {
         // Create new note
         const tempId = `temp-${Math.random().toString(36).substr(2, 9)}`

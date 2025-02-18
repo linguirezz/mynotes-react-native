@@ -4,11 +4,12 @@ import { Checkbox } from 'react-native-paper';
 import { useNoteContext } from '../../../contexts/notesContext';
 import styles from '../../../styles/dashboard/home/style';
 import { useToolBar } from '../../../contexts/toolBarContext';
-
+import { useNavigationUtils } from '../../../navigation/navigationFunction';
 
 function SquareBoxes() {
   const {notes,setNotes} = useNoteContext();
   const {toolBar,setToolBar}=useToolBar()
+  const {navigateAndResetAllRoutes} = useNavigationUtils()
   // handleNoteBoxLongPress
    const handleNoteBoxLongPress = async(id,event)=>{ 
       Vibration.vibrate(50);   

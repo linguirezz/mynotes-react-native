@@ -1,10 +1,12 @@
 import React from 'react'
-import {View,Text} from "react-native"
+import {View,TextInput} from "react-native"
+import styles from '../../styles/dashboard/home/style'
 function SearchBar() {
   return (
-     <View>
-         <Text>SearchBar</Text>
-     </View>
+    <View style={styles.searchBar}>
+    <View style={styles.searchphotoBar}></View>
+    <TextInput style={styles.barTextInput} placeholder='Search Notes' placeholderTextColor={"#4B527A"} />
+  </View>
   )
 }
 
