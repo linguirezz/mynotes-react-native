@@ -1,12 +1,13 @@
+//android-keytools 339796359819-gdbn6ps61u31qcfokmib2pfkrvc9mdk6.apps.googleusercontent.com
+//android-eas 339796359819-b8i40e8djvlabku9kn41t7sje36mqv9a.apps.googleusercontent.com
 version alpha 0.1.0 :
 - read , edit ,write , and delete notes
 - authentication 
 todo :
-- make the logic works on the note Screen
-- start moving business logic to seperate folder
+- mak
+- start moving business logic to seperate folder (i will do it later)
 - make a folder for each components
 - make the add button do not collide with keyboard (otw)
-- rilis versi alpha 0.1.0
 
   refactoring strategy :
 Membuat kode yang berantakan menjadi bersih dan mudah dibaca adalah langkah penting dalam pengembangan perangkat lunak. Berikut adalah **strategi profesional** yang bisa Anda terapkan untuk membersihkan dan merapikan kode Anda:

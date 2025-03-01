@@ -10,29 +10,6 @@ import { NoteScreenComponents } from '../../utils/importUtils'
 const {NoteInput,ToolBar}  = NoteScreenComponents
 
 function NoteScreen() {
-  const [note, setNote] = useState({ title: "", content: "" })
-  const [currentNote, setCurrentNote] = useState(null)
-  const { notes, setNotes } = useNoteContext()
-  const { account } = useAuthContext()
-  const {navigateAndResetAllRoutes,navigateAndKeepTheRoutes} =useNavigationUtils();
-
-  // Handle input changes
-  const handleNote = (key, value) => {
-    setNote(prev => ({ ...prev, [key]: value }))
-  }
-  // Track selected note
-  useEffect(() => {
-    const selected = notes.find(note => note.isSelected)
-    console.log("is there any selected (noteScreen : 68) :",selected)
-    if (selected) {
-      setCurrentNote(selected)
-      setNote({ title: selected.title, content: selected.content })
-    } else {
-      setCurrentNote(null)
-      setNote({ title: "", content: "" })
-    }
-  }, [notes])
-
   return (
     
     <View style={Style.container}>

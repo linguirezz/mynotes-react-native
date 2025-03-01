@@ -6,6 +6,7 @@ import {useNavigationUtils} from '../../navigation/navigationFunction';
 import { useAuthContext } from '../../contexts/authContext';
 import { Style } from '../../styles/dashboard/notes/style';
 import { theme } from '../../styles/dashboard/theme';
+import useGoogleSignIn from '../../services/googleAuthService';
 
 
 function LoginScreen({navigation})  {
@@ -16,7 +17,22 @@ function LoginScreen({navigation})  {
 
 const {setAccount} = useAuthContext()
 const { navigateAndKeepTheRoutes, navigateAndResetAllRoutes } = useNavigationUtils();
+// sign in with google handler
+const { signInWithGoogle, isReady } = useGoogleSignIn();
+const handleGoogleSignIn = async () => {
+  alert("click !")
 
+  
+  try {
+    const userData = await signInWithGoogle();
+    setUserInfo(userData);
+  } catch (err) {
+    setError('Failed to sign in with Google.');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
 handleCredential= (key,value)=>{
     setCredential({...credential,[key]:value})
@@ -63,15 +79,6 @@ handleSubmit = async()=>{
     }
 }
 
-const handleGoogleLogin = async ()=>{
-// fix thisssss 
-    
-   
-   
-  
- 
-}
-
 useEffect(()=>{   
     console.log(`credential typed: ${JSON.stringify(credential)} `) ;
 },[credential])
@@ -108,7 +115,8 @@ useEffect(()=>{
    </View>
    {/* other login option buttons group */}
    <View>
-     <TouchableOpacity style={styles.googleBtn} onPress={()=>{alert("login with google is under development,please wait for the next update ")}}>
+    {/* login with google */}
+     <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleSignIn}>
        {/* <Image source={require("../../assets/favicon.png")}/> */}
        <Text style={{fontSize:17,fontWeight:"600"}}>Login With Google</Text>
      </TouchableOpacity>

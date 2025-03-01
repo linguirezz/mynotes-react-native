@@ -5,6 +5,11 @@ import { useAuthRequest } from 'expo-auth-session';
 import * as Constants from 'expo-constants';
 import { useEffect } from "react";
 // import {GOOGLE_EXPO_WEB_CLIENT_ID} from "@env"
+// web 339796359819-oheh05noumtmclrve5us2bfu9qlnuq01.apps.googleusercontent.com
+// ios 339796359819-qo55t1lo8tbi6996h7ses2a5bm88fj8t.apps.googleusercontent.com
+//android-keytools 339796359819-gdbn6ps61u31qcfokmib2pfkrvc9mdk6.apps.googleusercontent.com
+//android-eas 339796359819-b8i40e8djvlabku9kn41t7sje36mqv9a.apps.googleusercontent.com
+// 
 import { createUserWithEmailAndPassword,
     getAuth,
     sendEmailVerification,
@@ -168,6 +173,10 @@ async function confirmResetPassword(verifCode,newPassword){
   }  
 }
 
+async function signInWithGoogle(){
+
+}
+
 export {createUser,
   signInUser,
   sendEmailVerifyNotification,
@@ -177,5 +186,4 @@ export {createUser,
   signInAsGuestAccount,
   resetEmail,
   confirmResetPassword,
-
 }

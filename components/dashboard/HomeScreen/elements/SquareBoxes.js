@@ -26,7 +26,7 @@ function SquareBoxes() {
           const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:true}:note});
           console.log("note selected before edit :",updatedNotesSelected)
           setNotes(updatedNotesSelected);
-        navigateAndResetAllRoutes(navigation,"note")  
+        navigateAndResetAllRoutes("note")  
         } catch (error) {
           console.error("error terjadi pada fungsi handleNoteBoxPress:",error)
         }

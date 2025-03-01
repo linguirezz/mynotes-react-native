@@ -4,35 +4,13 @@ import styles from '../../../styles/dashboard/home/style';
 import { useNavigationUtils } from '../../../navigation/navigationFunction';
 import ProfileMenu from './elements/ProfileMenu';
 import { useAuthContext } from '../../../contexts/authContext';
+import useHomeScreenUtils from './hook/useHomeScreenUtils';
 
 function Header() {
-  const [profileMenu, setProfileMenu] = useState({
-    position: {
-      x: 0,
-      y: 0,
-    },
-    isVisible: false,
-    isSelectedAll: false,
-  });
-
-  // Use global state
+  // Use global state for accesing account property
   const { account } = useAuthContext();
-
-  //  Call the hook at the top level
-  const { navigateAndKeepTheRoutes, navigateAndResetAllRoutes } = useNavigationUtils();
-
-  // Handle Profile Long Press
-  const handleProfileLongPress = (event) => {
-    const newX = event.nativeEvent.pageX;
-    const newY = event.nativeEvent.pageY;
-    console.log('x :', newX);
-    console.log('y :', newY);
-    setProfileMenu((prevState) => ({
-      ...prevState,
-      position: { x: newX, y: newY },
-      isVisible: true,
-    }));
-  };
+  const {handleLoginButtonPress,handleProfileButtonLongPress,profileMenu} =useHomeScreenUtils();
+ 
 
   return (
     <>
@@ -43,21 +21,21 @@ function Header() {
           // Login button
           <TouchableOpacity
             style={styles.loginButton}
-            onPress={() => navigateAndResetAllRoutes('login')} 
+            onPress={handleLoginButtonPress } 
           >
             <Text style={{ color: '#ffffff', fontWeight: '800' }}>Login</Text>
           </TouchableOpacity>
         ) : (
           // Profile button
           <TouchableOpacity
-            onLongPress={handleProfileLongPress}
-            onPress={() => navigateAndResetAllRoutes('profile')} 
+            onLongPress={handleProfileButtonLongPress}
+            onPress={handleProfileButtonPress} 
           >
             <View style={styles.profile}></View>
           </TouchableOpacity>
         )}
       </View>
-      <ProfileMenu isVisible={profileMenu.isVisible} setProfileMenu={setProfileMenu} />
+      <ProfileMenu isVisible={profileMenu.isVisible}  />
     </>
   );
 }

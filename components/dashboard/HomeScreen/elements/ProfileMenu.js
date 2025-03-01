@@ -2,25 +2,16 @@ import React from 'react'
 import {Modal,TouchableOpacity,View,Text} from 'react-native'
 import styles from '../../../../styles/dashboard/home/style'
 import { theme } from '../../../../styles/dashboard/theme'
-import { signOutUser } from '../../../../services/authServices'
-import { useNavigationUtils } from '../../../../navigation/navigationFunction'
-function ProfileMenu({isVisible,setProfileMenu}) {
-  const {navigateAndResetAllRoutes} = useNavigationUtils(); 
-  const handleLogout= async()=>{
-    console.log("handleLogout (homescreen : 106)")
-    setProfileMenu((prev)=>({...prev,isVisible:false}))
-    navigateAndResetAllRoutes("login")
-    await signOutUser()
+import useHomeScreenUtils from '../hook/useHomeScreenUtils'
 
-  }
-  const handleSettingsButton= ()=>{
-    navigateAndResetAllRoutes("settings")
- }
+function ProfileMenu() {
+  const {handleLoginButtonPress,profileMenu,handleLogout,handleMenuOverLayPress,handleSettingsButton} =useHomeScreenUtils();
+
   return (
     <>
          {/* profile menu */}
-         <Modal transparent visible={isVisible} >
-                <TouchableOpacity style={styles.menuOverLay} activeOpacity={1} onPress={()=>{setProfileMenu((prev)=>({...prev,isVisible:false}))}}>
+         <Modal transparent visible={profileMenu.isVisible} >
+                <TouchableOpacity style={styles.menuOverLay} activeOpacity={1} onPress={handleMenuOverLayPress}>
                 <View style={[styles.menu ,{right:15 ,top:80,}]} >
                    
                   <TouchableOpacity style={
