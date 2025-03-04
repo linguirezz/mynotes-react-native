@@ -18,18 +18,18 @@ function NotesFolder() {
         contentContainerStyle={styles.scrollContainer}
       >
         {/* Folder units */}
-        <View style={styles.folderUnit}></View>
-        <View style={styles.folderUnit}></View>
-        <View style={styles.folderUnit}></View>
-        <View style={styles.folderUnit}></View>
-        <View style={styles.folderUnit}></View>
-        <View style={styles.folderUnit}></View>
-        <View style={styles.folderUnit}></View>
-        <View style={styles.folderUnit}></View>
+        <View style={styles.folderUnit}><Text>Folder</Text></View>
+        <View style={styles.folderUnit}><Text>Folder</Text></View>
+        <View style={styles.folderUnit}><Text>Folder</Text></View>
+        <View style={styles.folderUnit}><Text>Folder</Text></View>
+        <View style={styles.folderUnit}><Text>Folder</Text></View>
+        <View style={styles.folderUnit}><Text>Folder</Text></View>
+        <View style={styles.folderUnit}><Text>Folder</Text></View>
+        
       </ScrollView>
       <TouchableWithoutFeedback onPress={handleOpenAddMenu}>
         <View style={styles.addButton}>
-          <Text>add</Text>
+          <Text style={[{color:'white' ,fontWeight:"700"}]}>+</Text>
         </View>
       </TouchableWithoutFeedback>
     </View>
@@ -48,15 +48,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     marginHorizontal: 5, // Memberikan jarak antar folder
+    alignItems:"center",
+    justifyContent:"center"
   },
   addButton: {
     backgroundColor: "white",
     height: 30,
-    width: 70,
+    width: 71,
     position: 'absolute',
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    borderTopLeftRadius : 35,
+    borderBottomLeftRadius : 35,
+    backgroundColor:'black',
+    
   },
 });
 

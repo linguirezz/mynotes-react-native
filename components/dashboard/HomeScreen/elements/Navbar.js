@@ -11,8 +11,7 @@ function NavBar() {
         <TouchableOpacity style={[{
           width:30,
           height:30,
-          borderRadius:25,
-          backgroundColor:theme.colors.button,
+          backgroundColor:'red',
          
         }]}  onPress={()=>{ navigateAndKeepTheRoutes("note") }}>
        <Text style={styles.addButtonContent}></Text>
@@ -24,13 +23,16 @@ function NavBar() {
           backgroundColor:theme.colors.button,
           marginBottom:30
         }]} onPress={()=>{ navigateAndKeepTheRoutes("note") }}>
-       <Text style={styles.addButtonContent}></Text>
+       <Text style={[{position:"absolute",fontSize:50,color:"white",position: 'absolute',
+    top: -8,  // Jarak dari atas container
+    left:12, }]}>
+         +
+       </Text>
      </TouchableOpacity>
         <TouchableOpacity style={[{
           width:30,
           height:30,
-          borderRadius:25,
-          backgroundColor:theme.colors.button,
+          backgroundColor:'white',
           
         }]} onPress={()=>{ navigateAndKeepTheRoutes("note") }}>
        <Text style={styles.addButtonContent}></Text>
