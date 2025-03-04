@@ -39,9 +39,9 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: colors.box,
     borderRadius: 30,
-   
+
     flexDirection: "row",
-    marginBottom: 50,
+    marginBottom: 20,
     alignItems: "center",
     overflow: "hidden",
   },
@@ -53,10 +53,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   barTextInput: {
-    width: "100%",
+    width: 180,
     height: "100%",
     fontSize: 20,
     color: "#ffffff",
+ 
   },
   notesSection: {
     width: "100%",
@@ -86,17 +87,17 @@ const styles = StyleSheet.create({
     flexDirection:"column",
     
   },
-  addButton: {
+  navBar: {
     backgroundColor: colors.button,
-    width: 50,
+    width: "100%",
     height: 50,
     alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 25,
+    justifyContent: "space-around",
     position: "absolute",
-    bottom: 50,
-    right:"50%",
-    transform: [{ translateX: +15 }],
+    bottom: 0,
+    backgroundColor:"black",
+    flexDirection :"row",
+    
      // Tambahkan ini untuk menempatkan tombol di sudut kanan bawah
   },
 

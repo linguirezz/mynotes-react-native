@@ -2,7 +2,7 @@
 import Header from '../components/dashboard/HomeScreen/Header';
 import NotesGroup from '../components/dashboard/HomeScreen/NotesGroup';
 import SearchBar from '../components/dashboard/HomeScreen/SearchBar'
-import AddButton from '../components/dashboard/HomeScreen/elements/AddButton'
+import AddButton from '../components/dashboard/HomeScreen/elements/Navbar'
 import LowerToolBar from '../components/dashboard/HomeScreen/elements/LowerToolBar'
 import UpperToolBar from '../components/dashboard/HomeScreen/elements/UpperToolBar'
 // NotesScreen
