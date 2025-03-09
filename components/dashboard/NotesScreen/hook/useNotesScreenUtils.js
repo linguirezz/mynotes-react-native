@@ -4,12 +4,15 @@ import { useNavigationUtils } from '../../../../navigation/navigationFunction'
 import { useAuthContext } from '../../../../contexts/authContext'
 import { uploadsNote } from '../../../../services/firestoreServices'
 import { editNotes } from '../../../../services/firestoreServices';
+import { useFolderMenuUtils } from '../../HomeScreen/notesFolderComponents/hooks/useFolderContext';
 function useNotesScreenUtils(){
     const {navigateAndResetAllRoutes} =useNavigationUtils();
     const {currentNote,setNotes,note,setNote}= useNoteContext();
     const {account}=useAuthContext()
+    const {currentFolder} = useFolderMenuUtils();
      // Handle save/update note
        const handleSave = async () => {
+        console.log(currentFolder)
          try {
            const { title, content } = note
            if (currentNote) {
@@ -33,8 +36,7 @@ function useNotesScreenUtils(){
              setNotes(prev => [...prev, newNote])
              navigateAndResetAllRoutes( "home")
              // Server update
-             const uploadedNote = await uploadsNote(account.uid, title, content)
-             
+             const uploadedNote = await uploadsNote(account.uid, title, content,{parentFolderId:currentFolder})
              // Update with real ID
              setNotes(prevNotes => 
                prevNotes.map(note => 

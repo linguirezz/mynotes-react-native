@@ -5,17 +5,15 @@ import { useToolBar } from '../../contexts/toolBarContext';
 import Style from '../../styles/dashboard/home/style'
 import { HomeScreenComponents } from '../../utils/importUtils';
 import NotesFolder from '../../components/dashboard/HomeScreen/notesFolderComponents/NotesFolder';
-import { FolderMenuProvider } from '../../components/dashboard/HomeScreen/notesFolderComponents/hooks/useAddFolderMenu';
 import CreateFolderMenu from '../../components/dashboard/HomeScreen/notesFolderComponents/CreateFolderMenu';
 const {Header,NotesGroup,SearchBar,AddButton,LowerToolBar,UpperToolBar} = HomeScreenComponents
 function HomeScreen() {
   const {toolBar}=useToolBar();
-
   return (
-<FolderMenuProvider>
+<>
+
   <CreateFolderMenu></CreateFolderMenu>
-<View  style={Style.container}>
-          
+<View  style={Style.container}>      
           <ScrollView style={Style.scrollView}  >
            {/* HEAD */}
           {
@@ -46,7 +44,7 @@ function HomeScreen() {
        <AddButton/>
        }
            </View>
-</FolderMenuProvider>
+           </>
 
   )
 }

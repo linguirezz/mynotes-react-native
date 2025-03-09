@@ -9,7 +9,7 @@ import useHomeScreenUtils from './hook/useHomeScreenUtils';
 function Header() {
   // Use global state for accesing account property
   const { account } = useAuthContext();
-  const {handleLoginButtonPress,handleProfileButtonLongPress,profileMenu} =useHomeScreenUtils();
+  const {handleLoginButtonPress,handleProfileButtonLongPress,profileMenu,handleProfileButtonPress} =useHomeScreenUtils();
  
 
   return (

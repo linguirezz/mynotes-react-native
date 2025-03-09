@@ -1,17 +1,46 @@
-import React from 'react'
+import React, { useState,useEffect } from 'react'
 import {View,Text,TouchableOpacity} from 'react-native'
-import { useFolderMenuUtils } from './hooks/useAddFolderMenu'
+import { useFolderMenuUtils } from './hooks/useFolderContext'
 import { TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { theme } from '../../../../styles/dashboard/theme';
-
+import { createFolder } from '../../../../services/firestoreServices';
+import { useAuthContext } from '../../../../contexts/authContext';
 function CreateFolderMenu() {
-    const {isAddFolderMenuVisible,setIsAddFolderMenuVisible}= useFolderMenuUtils();
-    const handleAddFolder = () =>{
+    const {account} =useAuthContext();
+    const {isAddFolderMenuVisible,setIsAddFolderMenuVisible,setFoldersList,currentFolder}= useFolderMenuUtils();
+    const [inputValue,setInputValue] = useState({
+        folderId : ""
+    });
+    const handleInputChanged=(text)=>{
+        setInputValue({...inputValue,folderId:text})
+    }
+    const handleAddFolder = async () =>{
+        
+        console.log("adding new folder")
+        const {folderId} = inputValue
+        if (currentFolder === "all notes") {
+            setFoldersList(prev => [...prev, { folderId, parentFolderId: null }]);
+        } else {
+            setFoldersList(prev => [...prev, { folderId, parentFolderId: currentFolder }]);
+        }
+        console.log("currently we are in ",currentFolder,"folder")
+       
+        const response = await createFolder(account.uid,folderId,currentFolder === "all notes"?null : currentFolder);
+        console.log("creating folder .....")
+        if(response.success === true){
+            console.log("folder berhasil dibuat")
+        }
+        else{
+            console.log("folder gagal dibuat")
+        }
         setIsAddFolderMenuVisible(false);
     }
     const handleOverlayMenuPressed = ()=>{
         setIsAddFolderMenuVisible(false);    
     }
+    useEffect(()=>{
+        console.log(inputValue)
+    },[inputValue])
   return (
     <>
     {isAddFolderMenuVisible && <TouchableOpacity style={[{
@@ -45,7 +74,12 @@ function CreateFolderMenu() {
                 backgroundColor:theme.colors.box,
                 borderRadius:20,
                 marginBottom:20,
-            }]}/>
+                paddingHorizontal:10
+            }]}
+            onChangeText={(text)=>{
+                handleInputChanged(text)
+            }}
+            />
             <TouchableWithoutFeedback style={[{
                 width:50,
                 height:40,
@@ -55,7 +89,9 @@ function CreateFolderMenu() {
                 borderRadius:10,
                 alignSelf:"flex-end",
                 marginRight:5,
-            }]}>
+            }]}
+            onPress={handleAddFolder}
+            >
                 <Text>add</Text>
             </TouchableWithoutFeedback>
         </View> 

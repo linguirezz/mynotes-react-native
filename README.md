@@ -4,10 +4,18 @@ version alpha 0.1.0 :
 - read , edit ,write , and delete notes
 - authentication 
 todo :
-- mak
-- start moving business logic to seperate folder (i will do it later)
-- make a folder for each components
-- make the add button do not collide with keyboard (otw)
+ - buat fitur organizing notes into folders
+   1. create a collection which the name is folders
+   2. create document that contains : name folder , induk folder, dan time stamp
+   3. saat menulis notes , notes akan dilabeli sesuai dengan folder nya
+   BUG : notes tidak muncul sesuai dengan foldernya dan tidak ada cara untuk kembali ke folder root
+       
+
+
+
+
+
+
 
   refactoring strategy :
 Membuat kode yang berantakan menjadi bersih dan mudah dibaca adalah langkah penting dalam pengembangan perangkat lunak. Berikut adalah **strategi profesional** yang bisa Anda terapkan untuk membersihkan dan merapikan kode Anda:

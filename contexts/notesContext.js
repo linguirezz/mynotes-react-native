@@ -28,6 +28,7 @@ export function NoteProvider({ children }) {
           id: note.id,
           title: note.data.title,
           content: note.data.content,
+          parentFolderId : note.data.parentFolderId,
           isSelected: false,
           isPinned: false,
         }));

@@ -14,6 +14,7 @@ import ResetPasswordScreen from "../views/auth/ResetPasswordScreen.js";
 import RecoveryEmailScreen from "../views/auth/RecoveryEmailScreen.js";
 import SettingsScreen from "../views/settings/SettingsScreen.js";
 import ProfileScreen from "../views/dashboard/ProfileScreen.js";
+import Auth from "../views/test/SupabaseLoginScreen.js";
 function AppNavigator() {
   return (
     <NavigationContainer>
@@ -25,8 +26,8 @@ function AppNavigator() {
             <Stack.Screen name="note" component={NoteScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="settings" component={SettingsScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="profile" component={ProfileScreen} options={{ headerShown: false }}/>
-             {/* <Stack.Screen name="test" component={TestScreen} options={{ headerShown: false }}/> */}
          
+             {/* <Stack.Screen name="test" component={Auth} options={{ headerShown: false }}/> */}
             {/* auth */}
           <Stack.Screen name="login" component={LoginScreen} options={{ headerShown: false }}/>{/** warning!!!!! ubah kembali menjadi login screeen */}
             <Stack.Screen name="register" component={RegisterScreen} options={{ headerShown: false }}/>

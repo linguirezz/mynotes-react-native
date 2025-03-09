@@ -5,11 +5,13 @@ import { useNoteContext } from '../../../../contexts/notesContext';
 import styles from '../../../../styles/dashboard/home/style';
 import { useToolBar } from '../../../../contexts/toolBarContext';
 import { useNavigationUtils } from '../../../../navigation/navigationFunction';
+import { useFolderMenuUtils } from '../notesFolderComponents/hooks/useFolderContext';
 
 function SquareBoxes() {
   const {notes,setNotes} = useNoteContext();
   const {toolBar,setToolBar}=useToolBar()
   const {navigateAndResetAllRoutes} = useNavigationUtils()
+  const {currentNote} = useFolderMenuUtils();
   // handleNoteBoxLongPress
    const handleNoteBoxLongPress = async(id,event)=>{ 
       Vibration.vibrate(50);   
@@ -40,7 +42,9 @@ function SquareBoxes() {
   
   return (
     <View>
-    {notes.map((note, index) =>
+    {notes.filter(()=>{
+
+    }).map((note, index) =>
      {console.log(note);return index % 2 === 0 ? ( // genap: squareBox
         <TouchableOpacity
           style={styles.squareBox}

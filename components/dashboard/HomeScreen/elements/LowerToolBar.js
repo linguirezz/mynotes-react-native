@@ -1,12 +1,14 @@
 import React from 'react'
 import {View,TouchableOpacity} from "react-native"
 import styles from '../../../../styles/dashboard/home/style'
-import { deleteNote } from '../../../../services/firestoreServices'
+import { deleteNote, moveNotesIntoFolder } from '../../../../services/firestoreServices'
 import { useToolBar } from '../../../../contexts/toolBarContext';
 import { useNoteContext } from '../../../../contexts/notesContext';
+import { useAuthContext } from '../../../../contexts/authContext';
 function LowerToolBar() {
     const {notes,setNotes}=useNoteContext();
     const {setToolBar} = useToolBar()
+    const {account} =useAuthContext();
 const handlePinNotes= () =>{
         // Jika notes selected, ubah pinnya menjadi true
          const updatedNotes = notes.map((note) =>
@@ -34,6 +36,11 @@ const handlePinNotes= () =>{
         //  server change
        await deleteNote(account.uid,id)
       }
+      const handleMoveNotes = async ()=>{
+        const selectedNotes = notes.filter(note=>(note.isSelected === true))
+        const selectedIds = selectedNotes.map(selectedNote => (selectedNote.id))
+        await moveNotesIntoFolder(account.uid,selectedIds,"works")
+      }
   return (
     <View style={[styles.toolBar,{bottom : 0} ]}>
     <TouchableOpacity onPress={handleDeleteNote}>
@@ -41,6 +48,9 @@ const handlePinNotes= () =>{
       </TouchableOpacity>
     <TouchableOpacity onPress={handlePinNotes}>
       <View style={[{width:30,height:30,backgroundColor:"white"}]}></View>
+      </TouchableOpacity>
+    <TouchableOpacity onPress={handleMoveNotes}>
+      <View style={[{width:30,height:30,backgroundColor:"blue"}]}></View>
       </TouchableOpacity>
    </View> 
   )

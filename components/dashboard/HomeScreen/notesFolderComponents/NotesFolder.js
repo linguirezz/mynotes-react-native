@@ -1,13 +1,29 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
-import { useFolderMenuUtils } from './hooks/useAddFolderMenu';
+import { View, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import { useFolderMenuUtils } from './hooks/useFolderContext';
+import { useAuthContext } from '../../../../contexts/authContext';
+import { useNoteContext } from '../../../../contexts/notesContext';
 
 function NotesFolder() {
-  const { setIsAddFolderMenuVisible } = useFolderMenuUtils();
+  const { setIsAddFolderMenuVisible,foldersList,setCurrentFolder,currentFolder } = useFolderMenuUtils();
+  const {account} =useAuthContext();
+  const {notes,setNotes}= useNoteContext();
   const handleOpenAddMenu = () => {
     console.log("menu is open")
     setIsAddFolderMenuVisible(true);
   }
+  const handleUnitFolderPress = (folderId)=>{
+    console.log("clicked")
+    console.log(folderId)  
+    setCurrentFolder(folderId)
+    console.log("currently we are in ",currentFolder,"folder")
+     const notesInSelectedFolder = notes.filter(note=>(note.parentFolderId === folderId))
+     console.log("notes in ",folderId,"folder :",notesInSelectedFolder);
+    if(notesInSelectedFolder){
+       setNotes(notesInSelectedFolder)
+    }
+  }
+  
   return (
     <View style={[{
         marginBottom:20
@@ -18,14 +34,10 @@ function NotesFolder() {
         contentContainerStyle={styles.scrollContainer}
       >
         {/* Folder units */}
-        <View style={styles.folderUnit}><Text>Folder</Text></View>
-        <View style={styles.folderUnit}><Text>Folder</Text></View>
-        <View style={styles.folderUnit}><Text>Folder</Text></View>
-        <View style={styles.folderUnit}><Text>Folder</Text></View>
-        <View style={styles.folderUnit}><Text>Folder</Text></View>
-        <View style={styles.folderUnit}><Text>Folder</Text></View>
-        <View style={styles.folderUnit}><Text>Folder</Text></View>
-        
+        {
+          foldersList.map(folder=> <TouchableOpacity onPress={()=>{handleUnitFolderPress(folder.folderId)}} key={folder.folderId}   style={styles.folderUnit}><Text>{folder.folderId}</Text></TouchableOpacity>)
+        }
+               
       </ScrollView>
       <TouchableWithoutFeedback onPress={handleOpenAddMenu}>
         <View style={styles.addButton}>

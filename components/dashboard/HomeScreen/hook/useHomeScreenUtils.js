@@ -73,6 +73,6 @@ function useHomeScreenUtils () {
         setProfileMenu((prev)=>({...prev,isVisible:false}))
      }
      
-    return{profileMenu,handleProfileButtonLongPress,handleLoginButtonPress,handleLogout,handleSettingsButton,handleMenuOverLayPress,handleSettingsButton}
+    return{profileMenu,handleProfileButtonLongPress,handleLoginButtonPress,handleLogout,handleSettingsButton,handleMenuOverLayPress,handleSettingsButton,handleProfileButtonPress}
 }
 export default useHomeScreenUtils
