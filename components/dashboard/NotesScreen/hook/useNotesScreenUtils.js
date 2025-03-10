@@ -12,7 +12,7 @@ function useNotesScreenUtils(){
     const {currentFolder} = useFolderMenuUtils();
      // Handle save/update note
        const handleSave = async () => {
-        console.log(currentFolder)
+       
          try {
            const { title, content } = note
            if (currentNote) {
@@ -36,7 +36,7 @@ function useNotesScreenUtils(){
              setNotes(prev => [...prev, newNote])
              navigateAndResetAllRoutes( "home")
              // Server update
-             const uploadedNote = await uploadsNote(account.uid, title, content,{parentFolderId:currentFolder})
+             const uploadedNote = await uploadsNote(account.uid, title, content,currentFolder)
              // Update with real ID
              setNotes(prevNotes => 
                prevNotes.map(note => 

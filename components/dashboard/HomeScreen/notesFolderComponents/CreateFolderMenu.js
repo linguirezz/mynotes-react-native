@@ -18,14 +18,14 @@ function CreateFolderMenu() {
         
         console.log("adding new folder")
         const {folderId} = inputValue
-        if (currentFolder === "all notes") {
-            setFoldersList(prev => [...prev, { folderId, parentFolderId: null }]);
+        if (currentFolder === "all folders") {
+            setFoldersList(prev => [...prev, { folderId, parentFolderId: "all folders" }]);
         } else {
             setFoldersList(prev => [...prev, { folderId, parentFolderId: currentFolder }]);
         }
         console.log("currently we are in ",currentFolder,"folder")
        
-        const response = await createFolder(account.uid,folderId,currentFolder === "all notes"?null : currentFolder);
+        const response = await createFolder(account.uid,folderId,currentFolder === "all folders"?"all folders" : currentFolder);
         console.log("creating folder .....")
         if(response.success === true){
             console.log("folder berhasil dibuat")

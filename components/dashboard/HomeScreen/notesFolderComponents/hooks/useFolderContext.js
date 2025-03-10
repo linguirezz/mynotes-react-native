@@ -7,7 +7,7 @@ const AddFolderMenuContext = createContext();
 export const FolderMenuProvider = ({ children }) => {
   const [isAddFolderMenuVisible, setIsAddFolderMenuVisible] = useState(false);
   const [foldersList,setFoldersList] = useState([]);
-  const [currentFolder,setCurrentFolder] = useState("all notes");
+  const [currentFolder,setCurrentFolder] = useState("all folders");
   const {account} =useAuthContext()
   useEffect(() => {
     console.log("Component mounted or account.uid changed");
@@ -19,9 +19,8 @@ export const FolderMenuProvider = ({ children }) => {
 
 const fetchFolders = async () => {
     console.log("Fetching folders...");
-    const response = await readFolders(account.uid,currentFolder === "all notes"?null:currentFolder); 
+    const response = await readFolders(account.uid,currentFolder === "all folders"?"all folders":currentFolder); 
     console.log(response);
-
     if (response.success) {
         console.log("Folder's tree path:", response.folders);
         updateFoldersList(response.folders);
@@ -29,7 +28,6 @@ const fetchFolders = async () => {
         console.error("Terjadi error saat menjalankan readFolders:", response.message);
     }
 };
-
 const updateFoldersList = (folders) => {
     // Cek apakah folders sudah ada di state sebelumnya
     console.log("updating folder list ........")

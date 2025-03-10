@@ -103,7 +103,7 @@ async function getFolders(foldersPath){
 }
 
 // add folder
-async function createFolder(userId,folderId, parentFolderId = null) {
+async function createFolder(userId,folderId, parentFolderId = "all folders") {
     console.log("masukkk")
     console.log(parentFolderId)
     try {
@@ -122,7 +122,7 @@ async function createFolder(userId,folderId, parentFolderId = null) {
     }   
 }
 
-async function readFolders(userId, parentFolderId = null) {
+async function readFolders(userId, parentFolderId = "all folders") {
     console.log(userId)
     // Validasi userId
     if (!userId) {

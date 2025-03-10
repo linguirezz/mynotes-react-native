@@ -5,10 +5,12 @@ import { useToolBar } from '../../../../contexts/toolBarContext';
 import styles from '../../../../styles/dashboard/home/style';
 import { Checkbox } from 'react-native-paper';
 import { useNavigationUtils } from '../../../../navigation/navigationFunction';
+import { useFolderMenuUtils } from '../notesFolderComponents/hooks/useFolderContext';
 function RectangleBoxes() {
    const {notes,setNotes} = useNoteContext();
     const {toolBar,setToolBar}=useToolBar()
     const {navigateAndResetAllRoutes}=useNavigationUtils();
+    const {currentFolder} =useFolderMenuUtils();
     // handleNoteBoxLongPress
      const handleNoteBoxLongPress = async(id,event)=>{ 
         Vibration.vibrate(50);   
@@ -38,7 +40,7 @@ function RectangleBoxes() {
    
   return (
     <View>
-    {notes.map((note, index) =>{console.log("index :",index);
+    {notes.filter((note)=>{return currentFolder === note.parentFolderId}).map((note, index) =>{console.log("index :",index);
      return index % 2 !== 0 ? ( // ganjil: rectangleBox
         <TouchableOpacity
           style={styles.rectangleBox}

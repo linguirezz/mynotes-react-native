@@ -11,7 +11,7 @@ function SquareBoxes() {
   const {notes,setNotes} = useNoteContext();
   const {toolBar,setToolBar}=useToolBar()
   const {navigateAndResetAllRoutes} = useNavigationUtils()
-  const {currentNote} = useFolderMenuUtils();
+  const {currentFolder} =useFolderMenuUtils();
   // handleNoteBoxLongPress
    const handleNoteBoxLongPress = async(id,event)=>{ 
       Vibration.vibrate(50);   
@@ -32,19 +32,15 @@ function SquareBoxes() {
         } catch (error) {
           console.error("error terjadi pada fungsi handleNoteBoxPress:",error)
         }
-      
       }else{
         const updatedNotesSelected = notes.map((note)=>{console.log(note.id === id);return note.id === id ? {...note,isSelected:!note.isSelected}:note});
         setNotes(updatedNotesSelected);
       }     
-    }
-   
-  
+    }  
+
   return (
     <View>
-    {notes.filter(()=>{
-
-    }).map((note, index) =>
+    {notes.filter((note)=>{return currentFolder === note.parentFolderId}).map((note, index) =>
      {console.log(note);return index % 2 === 0 ? ( // genap: squareBox
         <TouchableOpacity
           style={styles.squareBox}
